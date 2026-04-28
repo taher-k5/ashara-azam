@@ -114,101 +114,104 @@
             margin: 20px 0 0;
         }
 
-        /* ── Candle ── */
-        .candle-row {
+        /* ── Alam (Standard / Flag) ── */
+        .alam-row {
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            gap: 32px;
-            margin: 36px 0 16px;
+            gap: 52px;
+            margin: 32px 0 18px;
         }
-        .candle {
+        .alam {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0;
-        }
-        .flame-wrap {
-            position: relative;
-            width: 22px;
-            height: 44px;
-        }
-        .flame {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 18px;
-            height: 38px;
-            background: radial-gradient(ellipse at 50% 90%, #fff 0%, #ffe566 18%, #ffaa00 45%, #ff6600 72%, transparent 100%);
-            border-radius: 50% 50% 30% 30%;
-            filter: blur(1.5px);
-            transform-origin: bottom center;
-            animation: flicker 1.8s ease-in-out infinite;
-        }
-        .flame::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 14px;
-            background: radial-gradient(ellipse, #fff 0%, rgba(255,255,180,0.7) 60%, transparent 100%);
-            border-radius: 50%;
-        }
-        .flame-glow {
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 50px;
-            background: radial-gradient(ellipse, rgba(255,170,0,0.25) 0%, transparent 70%);
-            animation: flicker-glow 1.8s ease-in-out infinite;
-        }
-        @keyframes flicker {
-            0%,100% { transform: translateX(-50%) scaleX(1) scaleY(1) rotate(-1deg); }
-            25%      { transform: translateX(-50%) scaleX(0.88) scaleY(1.08) rotate(1.5deg); }
-            50%      { transform: translateX(-50%) scaleX(1.04) scaleY(0.96) rotate(-0.5deg); }
-            75%      { transform: translateX(-50%) scaleX(0.93) scaleY(1.05) rotate(2deg); }
-        }
-        @keyframes flicker-glow {
-            0%,100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
-            50%      { opacity: 1;   transform: translateX(-50%) scale(1.25); }
-        }
-        .candle-body {
-            width: 18px;
-            height: 52px;
-            background: linear-gradient(to right, #e8d5c4, #f5ede4 40%, #d4b89a);
-            border-radius: 2px 2px 4px 4px;
             position: relative;
         }
-        .candle-body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 6px;
-            background: #555;
+
+        /* SVG finial ornament */
+        .alam-ornament {
+            display: block;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+            animation: ornament-glow 3s ease-in-out infinite;
+        }
+        .alam-husain .alam-ornament { width: 34px; height: 44px; }
+        .alam-abbas  .alam-ornament { width: 22px; height: 28px; animation-delay: 0.7s; }
+
+        @keyframes ornament-glow {
+            0%, 100% { filter: drop-shadow(0 0 3px rgba(176,141,87,0.35)); }
+            50%       { filter: drop-shadow(0 0 14px rgba(176,141,87,0.95)) drop-shadow(0 0 26px rgba(176,141,87,0.28)); }
+        }
+
+        /* Pole */
+        .alam-pole {
+            width: 6px;
+            background: linear-gradient(to right, #b89040, #f0d080 38%, #b08030 68%, #8a6020);
             border-radius: 1px;
+            position: relative;
+            margin-top: 5px;
         }
-        .candle-wax {
-            width: 24px;
-            height: 6px;
-            background: radial-gradient(ellipse, #f5ede4 60%, #d4b89a 100%);
-            border-radius: 50% 50% 0 0;
-            margin-top: -1px;
+        .alam-husain .alam-pole { height: 130px; }
+        .alam-abbas  .alam-pole { height: 95px; }
+
+        /* Base ring */
+        .alam-base {
+            width: 18px;
+            height: 7px;
+            background: linear-gradient(to right, #7a5010, #f0d080 50%, #7a5010);
+            border-radius: 0 0 4px 4px;
         }
-        /* side candles slightly smaller */
-        .candle.small .candle-body { height: 36px; width: 14px; }
-        .candle.small .flame { width: 13px; height: 28px; }
-        .candle.small .flame-glow { width: 30px; height: 36px; }
-        .candle.small .candle-wax { width: 18px; }
-        .candle.small .flame-wrap { width: 16px; height: 32px; }
-        .candle.small .flame { animation-delay: 0.4s; }
+
+        /* Flag pennant - sits to the right of the pole */
+        .alam-flag {
+            position: absolute;
+            top: 4px;
+            left: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-origin: left center;
+            animation: flag-wave 4.5s ease-in-out infinite;
+        }
+        .alam-husain .alam-flag {
+            width: 74px;
+            height: 52px;
+            background: linear-gradient(150deg, #6b0000 0%, #9a0000 55%, #7a0000 100%);
+            clip-path: polygon(0 0, 100% 0, 86% 50%, 100% 100%, 0 100%);
+            border-left: 2px solid rgba(176,141,87,0.55);
+        }
+        .alam-abbas .alam-flag {
+            width: 54px;
+            height: 38px;
+            background: linear-gradient(150deg, #0c0c0c 0%, #1e1e1e 55%, #131313 100%);
+            clip-path: polygon(0 0, 100% 0, 86% 50%, 100% 100%, 0 100%);
+            border-left: 2px solid rgba(176,141,87,0.45);
+            box-shadow: inset 0 0 10px rgba(176,141,87,0.06), 0 0 5px rgba(176,141,87,0.1);
+        }
+
+        .alam-text {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            direction: rtl;
+            text-align: center;
+            text-shadow: 0 0 6px rgba(176,141,87,0.5);
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+        .alam-husain .alam-text { font-size: 12px; }
+        .alam-abbas  .alam-text { font-size: 10.5px; }
+
+        /* Second Abbas alam flag waves slightly out of phase */
+        .alam-row .alam-abbas:last-child .alam-flag { animation-delay: 0.8s; }
+
+        @keyframes flag-wave {
+            0%, 100% { transform: skewX(0deg)   scaleX(1);    }
+            28%       { transform: skewX(-7deg)  scaleX(0.91); }
+            55%       { transform: skewX(-2deg)  scaleX(0.97); }
+            78%       { transform: skewX(-6deg)  scaleX(0.92); }
+        }
 
         /* ── Info Cards ── */
         .info-section {
@@ -689,31 +692,39 @@
             <span></span>
         </div>
 
-        <div class="candle-row">
-            <div class="candle small">
-                <div class="flame-wrap">
-                    <div class="flame-glow"></div>
-                    <div class="flame"></div>
+        <div class="alam-row">
+
+            <!-- Abbas Alam — left -->
+            <div class="alam alam-abbas">
+                <!-- Crescent finial -->
+                <svg class="alam-ornament" viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16,4 A10,10 0 1,1 16,20 A8,8 0 1,0 16,4 Z" fill="#c9a96e"/>
+                </svg>
+                <div class="alam-pole">
+                    <div class="alam-flag"><span class="alam-text">يا عباس</span></div>
                 </div>
-                <div class="candle-wax"></div>
-                <div class="candle-body"></div>
+                <div class="alam-base"></div>
             </div>
-            <div class="candle">
-                <div class="flame-wrap">
-                    <div class="flame-glow"></div>
-                    <div class="flame"></div>
+
+            <!-- Husain Alam — centre (taller, red flag) -->
+            <div class="alam alam-husain">
+                <div class="alam-pole">
+                    <div class="alam-flag"><span class="alam-text">يا حسين</span></div>
                 </div>
-                <div class="candle-wax"></div>
-                <div class="candle-body"></div>
+                <div class="alam-base"></div>
             </div>
-            <div class="candle small">
-                <div class="flame-wrap">
-                    <div class="flame-glow"></div>
-                    <div class="flame"></div>
+
+            <!-- Abbas Alam — right -->
+            <div class="alam alam-abbas">
+                <svg class="alam-ornament" viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16,4 A10,10 0 1,1 16,20 A8,8 0 1,0 16,4 Z" fill="#c9a96e"/>
+                </svg>
+                <div class="alam-pole">
+                    <div class="alam-flag"><span class="alam-text">يا عباس</span></div>
                 </div>
-                <div class="candle-wax"></div>
-                <div class="candle-body"></div>
+                <div class="alam-base"></div>
             </div>
+
         </div>
 
         <h1 class="ya-husain">
@@ -731,8 +742,10 @@
 
     <!-- ── Quote ── -->
     <div class="quote-band">
-        <p class="quote-text">"Every day is Ashura and every land is Karbala."</p>
-        <p class="quote-attr">— Attributed to Imam Ja'far al-Sadiq (a.s.)</p>
+        <p class="quote-text">سواری غم في اوی کربلاء ما</p>
+        <p class="quote-text">حسينية دهاوی کربلاء ما</p>
+        <p class="quote-text">قیامة نے آوای کربلاء ما</p>
+        <p class="quote-text">حسینا یا حسینا یا حسینا!</p>
     </div>
 
     <!-- ── Info Cards ── -->
@@ -762,7 +775,7 @@
     <!-- ── Certificate ── -->
     <div class="cert-wrapper">
     <div id="certificate">
-        <img src="certificate-v2.png" alt="background" class="cert-bg">
+        <img src="/images/certificate-v2.png" alt="background" class="cert-bg">
 
         <div class="cert-header">
             <div class="cert-header-title">
@@ -867,113 +880,175 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const userNameInput = document.getElementById('userName');
-            const userITSInput = document.getElementById('userITS');
-            const downloadButton = document.getElementById('downloadButton');
-            const loaderOverlay = document.getElementById('loaderOverlay');
+            // Output resolution — matches certificate aspect ratio 1020 / 700
+            const TARGET_W   = 2040;
+            const TARGET_H   = 1400;
+            const CERT_MAX_W = 760;  // CSS max-width of #certificate
+
+            const nameInput   = document.getElementById('userName');
+            const itsInput    = document.getElementById('userITS');
+            const btn         = document.getElementById('downloadButton');
+            const overlay     = document.getElementById('loaderOverlay');
             const displayName = document.getElementById('display-name');
-            const displayITS = document.getElementById('display-its');
-            const errorMessageDiv = document.getElementById('errorMessage');
-            const certificateCurrentDateSpan = document.getElementById('certificate-current-date');
-            const defaultButtonText = 'Download My Certificate';
-            let isDownloading = false;
+            const displayITS  = document.getElementById('display-its');
+            const errorDiv    = document.getElementById('errorMessage');
+            const dateSpan    = document.getElementById('certificate-current-date');
+            const ITS_RE      = /^\d{8}$/;
 
-            const setLoadingState = (loading) => {
-                isDownloading = loading;
-                downloadButton.disabled = loading || downloadButton.disabled;
-                downloadButton.textContent = loading ? 'Generating Certificate...' : defaultButtonText;
-                downloadButton.classList.toggle('button-loading', loading);
-                loaderOverlay.classList.toggle('visible', loading);
-                loaderOverlay.setAttribute('aria-hidden', loading ? 'false' : 'true');
-            };
+            let busy = false;
 
-            const checkInputs = () => {
-                const name = userNameInput.value.trim();
-                const its = userITSInput.value.trim();
-                const itsRegex = /^\d{8}$/;
-                let isItsValid = false;
-
-                if (its === '') {
-                    errorMessageDiv.style.display = 'none';
-                } else if (!itsRegex.test(its)) {
-                    errorMessageDiv.textContent = 'ITS ID must be exactly 8 numeric digits.';
-                    errorMessageDiv.style.display = 'block';
-                } else {
-                    isItsValid = true;
-                    errorMessageDiv.style.display = 'none';
-                }
-
-                if (displayName) displayName.textContent = name;
-                if (displayITS) displayITS.textContent = its ? "ITS ID: " + its : "";
-                downloadButton.disabled = isDownloading || !(name && isItsValid);
-            };
-
-            certificateCurrentDateSpan.textContent = new Date().toLocaleDateString('en-US', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
+            // Convert the background <img> to a data: URI via XHR + FileReader.
+            // On file:// protocol, drawing a file:// image onto a canvas taints it
+            // and blocks toDataURL(). A data: URI is treated as same-origin, so it
+            // never taints. The promise resolves once the conversion is done (or if
+            // XHR is unavailable, resolves immediately so download still attempts).
+            const bgReadyPromise = new Promise((resolve) => {
+                const bgEl = document.querySelector('#certificate .cert-bg');
+                if (!bgEl || bgEl.src.startsWith('data:')) return resolve();
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', bgEl.src, true);
+                xhr.responseType = 'blob';
+                xhr.onload = function () {
+                    if (xhr.status === 200 || xhr.status === 0) { // 0 = success on file://
+                        const reader = new FileReader();
+                        reader.onloadend = function () { bgEl.src = reader.result; resolve(); };
+                        reader.readAsDataURL(xhr.response);
+                    } else {
+                        resolve();
+                    }
+                };
+                xhr.onerror = resolve; // XHR blocked — proceed; toDataURL will throw if still file://
+                xhr.send();
             });
 
-            checkInputs();
-            userNameInput.addEventListener('input', checkInputs);
-            userITSInput.addEventListener('input', checkInputs);
+            // ── Date ─────────────────────────────────────────────────────────────
+            dateSpan.textContent = new Date().toLocaleDateString('en-US', {
+                day: 'numeric', month: 'short', year: 'numeric',
+            });
 
-            downloadButton.addEventListener('click', async () => {
-                const name = userNameInput.value.trim();
-                const its = userITSInput.value.trim();
-                setLoadingState(true);
+            // ── Validation + live preview ─────────────────────────────────────────
+            function validate() {
+                const name = nameInput.value.trim();
+                const its  = itsInput.value.trim();
+                let itsOk  = false;
 
+                if (its === '') {
+                    errorDiv.style.display = 'none';
+                } else if (!ITS_RE.test(its)) {
+                    errorDiv.textContent   = 'ITS ID must be exactly 8 numeric digits.';
+                    errorDiv.style.display = 'block';
+                } else {
+                    itsOk = true;
+                    errorDiv.style.display = 'none';
+                }
+
+                displayName.textContent = name;
+                displayITS.textContent  = its ? 'ITS ID: ' + its : '';
+                btn.disabled = busy || !(name && itsOk);
+            }
+
+            nameInput.addEventListener('input', validate);
+            itsInput.addEventListener('input', validate);
+            validate();
+
+            // ── Loading state ─────────────────────────────────────────────────
+            function setLoading(on) {
+                busy            = on;
+                btn.disabled    = on;
+                btn.textContent = on ? 'Generating Certificate...' : 'Download My Certificate';
+                btn.classList.toggle('button-loading', on);
+                overlay.classList.toggle('visible', on);
+                overlay.setAttribute('aria-hidden', String(!on));
+            }
+
+            // ── Core: capture → compose → download ───────────────────────────────────────
+            async function generateAndDownload() {
+                // Wait for the background src to be converted to a data: URI.
+                // This resolves instantly on http:// (already done) or after the
+                // XHR+FileReader conversion on file://.
+                await bgReadyPromise;
+
+                const cert = document.getElementById('certificate');
+                const bgEl = cert.querySelector('.cert-bg');
+
+                // If XHR couldn't convert the image (e.g. browser blocked file:// XHR),
+                // bgEl.src is still a file:// URL and toDataURL() would throw.
+                // Surface a useful message instead of a cryptic SecurityError.
+                if (bgEl.src.startsWith('file:')) {
+                    throw new Error(
+                        'Cannot export on file:// — serve the folder via a local server.\n' +
+                        'Run in this folder:  python3 -m http.server 8000\n' +
+                        'Then open:          http://localhost:8000'
+                    );
+                }
+
+                // bgEl.src is now a data: URI — safe to decode and draw.
+                if (bgEl.decode) await bgEl.decode().catch(() => {});
+
+                // html2canvas does not support the CSS aspect-ratio property —
+                // it computes the element height as 0, producing a blank canvas.
+                // Fix: read the browser's already-computed dimensions first, then
+                // pin them as explicit px values on the cloned node so html2canvas
+                // never needs to resolve aspect-ratio itself.
+                const certRect   = cert.getBoundingClientRect();
+                const certWidth  = Math.round(certRect.width);
+                const certHeight = Math.round(certRect.height);
+                const scale      = TARGET_W / certWidth;
+
+                // Capture the text layer only (bgEl excluded via ignoreElements).
+                const textCanvas = await html2canvas(cert, {
+                    scale,
+                    useCORS:         false,
+                    allowTaint:      true,
+                    width:           certWidth,
+                    height:          certHeight,
+                    backgroundColor: null,
+                    logging:         false,
+                    ignoreElements:  el => el === bgEl,
+                    onclone: (clonedDoc) => {
+                        const cloned = clonedDoc.getElementById('certificate');
+                        if (!cloned) return;
+                        cloned.style.boxShadow   = 'none';
+                        // Replace aspect-ratio with the concrete px dimensions
+                        // the browser already calculated — html2canvas can use those.
+                        cloned.style.width       = certWidth  + 'px';
+                        cloned.style.height      = certHeight + 'px';
+                        cloned.style.aspectRatio = 'auto';
+                    },
+                });
+
+                // Compose: background first, text layer on top
+                const out = document.createElement('canvas');
+                out.width  = TARGET_W;
+                out.height = TARGET_H;
+                const ctx  = out.getContext('2d');
+                ctx.drawImage(bgEl,       0, 0, TARGET_W, TARGET_H);
+                ctx.drawImage(textCanvas, 0, 0, TARGET_W, TARGET_H);
+
+                // Personalised filename e.g. "Ashara-Azam-John-Doe-Dohad.png"
+                const safeName = nameInput.value.trim()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-');
+                const a    = document.createElement('a');
+                a.href     = out.toDataURL('image/png');
+                a.download = `Ashara-Azam-${safeName}-Dohad.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            // ── Button click ──────────────────────────────────────────────────
+            btn.addEventListener('click', async () => {
+                setLoading(true);
                 try {
-                    // Optional: Replace with your own Google Apps Script URL to save pledges
-                    // const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
-                    // try {
-                    //     await fetch(GOOGLE_SCRIPT_URL, {
-                    //         method: 'POST',
-                    //         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    //         body: JSON.stringify({ name, its }),
-                    //     });
-                    // } catch (err) {
-                    //     console.error('Failed to save pledge:', err);
-                    // }
-
-                    const certificateElement = document.querySelector("#certificate");
-                    const bgImage = document.querySelector(".cert-bg");
-
-                    bgImage.style.display = 'none';
-                    const originalBoxShadow = certificateElement.style.boxShadow;
-                    certificateElement.style.boxShadow = 'none';
-
-                    const targetWidth = 2040;
-                    const targetHeight = 1400;
-                    const desktopLayoutWidth = 760;
-                    const scaleFactor = targetWidth / desktopLayoutWidth;
-
-                    const textCanvas = await html2canvas(certificateElement, {
-                        scale: scaleFactor,
-                        useCORS: true,
-                        windowWidth: 1024,
-                        backgroundColor: null
-                    });
-
-                    bgImage.style.display = '';
-                    certificateElement.style.boxShadow = originalBoxShadow;
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = targetWidth;
-                    canvas.height = targetHeight;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(bgImage, 0, 0, targetWidth, targetHeight);
-                    ctx.drawImage(textCanvas, 0, 0, targetWidth, targetHeight);
-
-                    const link = document.createElement('a');
-                    link.download = 'Ashara-Azam-Certificate-Dohad.png';
-                    link.href = canvas.toDataURL("image/png");
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    await generateAndDownload();
+                } catch (err) {
+                    console.error('Certificate generation failed:', err);
+                    errorDiv.textContent   = 'Failed to generate certificate. Please try again.';
+                    errorDiv.style.display = 'block';
                 } finally {
-                    setLoadingState(false);
-                    checkInputs();
+                    setLoading(false);
+                    validate();
                 }
             });
         });
