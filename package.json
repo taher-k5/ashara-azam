@@ -1,0 +1,25 @@
+{
+  "name": "azam",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taher-k5/ashara-azam.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/taher-k5/ashara-azam/issues"
+  },
+  "homepage": "https://github.com/taher-k5/ashara-azam#readme",
+  "devDependencies": {
+    "vite": "^8.0.10"
+  }
+}
