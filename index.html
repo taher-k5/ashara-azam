@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Ashara Azam - Dohad</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --gold: #b08d57;
@@ -825,7 +826,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         /* ── Particle background ── */
         (function () {
@@ -878,180 +878,89 @@
             draw();
         })();
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Output resolution — matches certificate aspect ratio 1020 / 700
-            const TARGET_W   = 2040;
-            const TARGET_H   = 1400;
-            const CERT_MAX_W = 760;  // CSS max-width of #certificate
 
+    <script>
+        /* ── Certificate download ── */
+        (function () {
             const nameInput   = document.getElementById('userName');
             const itsInput    = document.getElementById('userITS');
-            const btn         = document.getElementById('downloadButton');
-            const overlay     = document.getElementById('loaderOverlay');
+            const downloadBtn = document.getElementById('downloadButton');
+            const errorMsg    = document.getElementById('errorMessage');
             const displayName = document.getElementById('display-name');
             const displayITS  = document.getElementById('display-its');
-            const errorDiv    = document.getElementById('errorMessage');
-            const dateSpan    = document.getElementById('certificate-current-date');
-            const ITS_RE      = /^\d{8}$/;
+            const loader      = document.getElementById('loaderOverlay');
+            const dateEl      = document.getElementById('certificate-current-date');
 
-            let busy = false;
-
-            // Convert the background <img> to a data: URI via XHR + FileReader.
-            // On file:// protocol, drawing a file:// image onto a canvas taints it
-            // and blocks toDataURL(). A data: URI is treated as same-origin, so it
-            // never taints. The promise resolves once the conversion is done (or if
-            // XHR is unavailable, resolves immediately so download still attempts).
-            const bgReadyPromise = new Promise((resolve) => {
-                const bgEl = document.querySelector('#certificate .cert-bg');
-                if (!bgEl || bgEl.src.startsWith('data:')) return resolve();
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', bgEl.src, true);
-                xhr.responseType = 'blob';
-                xhr.onload = function () {
-                    if (xhr.status === 200 || xhr.status === 0) { // 0 = success on file://
-                        const reader = new FileReader();
-                        reader.onloadend = function () { bgEl.src = reader.result; resolve(); };
-                        reader.readAsDataURL(xhr.response);
-                    } else {
-                        resolve();
-                    }
-                };
-                xhr.onerror = resolve; // XHR blocked — proceed; toDataURL will throw if still file://
-                xhr.send();
+            // Set today's date in the certificate
+            dateEl.textContent = new Date().toLocaleDateString('en-GB', {
+                day: 'numeric', month: 'long', year: 'numeric'
             });
 
-            // ── Date ─────────────────────────────────────────────────────────────
-            dateSpan.textContent = new Date().toLocaleDateString('en-US', {
-                day: 'numeric', month: 'short', year: 'numeric',
-            });
-
-            // ── Validation + live preview ─────────────────────────────────────────
-            function validate() {
+            // Mirror inputs into the certificate preview and toggle the button
+            function syncCertificate() {
                 const name = nameInput.value.trim();
                 const its  = itsInput.value.trim();
-                let itsOk  = false;
-
-                if (its === '') {
-                    errorDiv.style.display = 'none';
-                } else if (!ITS_RE.test(its)) {
-                    errorDiv.textContent   = 'ITS ID must be exactly 8 numeric digits.';
-                    errorDiv.style.display = 'block';
-                } else {
-                    itsOk = true;
-                    errorDiv.style.display = 'none';
-                }
-
                 displayName.textContent = name;
-                displayITS.textContent  = its ? 'ITS ID: ' + its : '';
-                btn.disabled = busy || !(name && itsOk);
+                displayITS.textContent  = its ? 'ITS: ' + its : '';
+                downloadBtn.disabled    = !(name && its);
             }
 
-            nameInput.addEventListener('input', validate);
-            itsInput.addEventListener('input', validate);
-            validate();
+            nameInput.addEventListener('input', syncCertificate);
+            itsInput.addEventListener('input', syncCertificate);
 
-            // ── Loading state ─────────────────────────────────────────────────
-            function setLoading(on) {
-                busy            = on;
-                btn.disabled    = on;
-                btn.textContent = on ? 'Generating Certificate...' : 'Download My Certificate';
-                btn.classList.toggle('button-loading', on);
-                overlay.classList.toggle('visible', on);
-                overlay.setAttribute('aria-hidden', String(!on));
-            }
+            downloadBtn.addEventListener('click', async function () {
+                const name = nameInput.value.trim();
+                const its  = itsInput.value.trim();
 
-            // ── Core: capture → compose → download ───────────────────────────────────────
-            async function generateAndDownload() {
-                // Wait for the background src to be converted to a data: URI.
-                // This resolves instantly on http:// (already done) or after the
-                // XHR+FileReader conversion on file://.
-                await bgReadyPromise;
-
-                const cert = document.getElementById('certificate');
-                const bgEl = cert.querySelector('.cert-bg');
-
-                // If XHR couldn't convert the image (e.g. browser blocked file:// XHR),
-                // bgEl.src is still a file:// URL and toDataURL() would throw.
-                // Surface a useful message instead of a cryptic SecurityError.
-                if (bgEl.src.startsWith('file:')) {
-                    throw new Error(
-                        'Cannot export on file:// — serve the folder via a local server.\n' +
-                        'Run in this folder:  python3 -m http.server 8000\n' +
-                        'Then open:          http://localhost:8000'
-                    );
+                if (!/^\d{8}$/.test(its)) {
+                    errorMsg.textContent  = 'Please enter a valid 8-digit ITS number.';
+                    errorMsg.style.display = 'block';
+                    return;
                 }
+                errorMsg.style.display = 'none';
 
-                // bgEl.src is now a data: URI — safe to decode and draw.
-                if (bgEl.decode) await bgEl.decode().catch(() => {});
+                loader.classList.add('visible');
+                downloadBtn.disabled = true;
 
-                // html2canvas does not support the CSS aspect-ratio property —
-                // it computes the element height as 0, producing a blank canvas.
-                // Fix: read the browser's already-computed dimensions first, then
-                // pin them as explicit px values on the cloned node so html2canvas
-                // never needs to resolve aspect-ratio itself.
-                const certRect   = cert.getBoundingClientRect();
-                const certWidth  = Math.round(certRect.width);
-                const certHeight = Math.round(certRect.height);
-                const scale      = TARGET_W / certWidth;
-
-                // Capture the text layer only (bgEl excluded via ignoreElements).
-                const textCanvas = await html2canvas(cert, {
-                    scale,
-                    useCORS:         false,
-                    allowTaint:      true,
-                    width:           certWidth,
-                    height:          certHeight,
-                    backgroundColor: null,
-                    logging:         false,
-                    ignoreElements:  el => el === bgEl,
-                    onclone: (clonedDoc) => {
-                        const cloned = clonedDoc.getElementById('certificate');
-                        if (!cloned) return;
-                        cloned.style.boxShadow   = 'none';
-                        // Replace aspect-ratio with the concrete px dimensions
-                        // the browser already calculated — html2canvas can use those.
-                        cloned.style.width       = certWidth  + 'px';
-                        cloned.style.height      = certHeight + 'px';
-                        cloned.style.aspectRatio = 'auto';
-                    },
-                });
-
-                // Compose: background first, text layer on top
-                const out = document.createElement('canvas');
-                out.width  = TARGET_W;
-                out.height = TARGET_H;
-                const ctx  = out.getContext('2d');
-                ctx.drawImage(bgEl,       0, 0, TARGET_W, TARGET_H);
-                ctx.drawImage(textCanvas, 0, 0, TARGET_W, TARGET_H);
-
-                // Personalised filename e.g. "Ashara-Azam-John-Doe-Dohad.png"
-                const safeName = nameInput.value.trim()
-                    .replace(/[^\w\s-]/g, '')
-                    .replace(/\s+/g, '-');
-                const a    = document.createElement('a');
-                a.href     = out.toDataURL('image/png');
-                a.download = `Ashara-Azam-${safeName}-Dohad.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-
-            // ── Button click ──────────────────────────────────────────────────
-            btn.addEventListener('click', async () => {
-                setLoading(true);
                 try {
-                    await generateAndDownload();
+                    const cert = document.getElementById('certificate');
+
+                    // Freeze CSS animations so the snapshot is clean
+                    cert.style.animation = 'none';
+
+                    const canvas = await html2canvas(cert, {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        imageTimeout: 15000,
+                        onclone: function (clonedDoc) {
+                            // Ensure the cloned certificate fills its natural size
+                            const clonedCert = clonedDoc.getElementById('certificate');
+                            clonedCert.style.animation = 'none';
+                            clonedCert.style.maxWidth   = 'none';
+                            clonedCert.style.width      = '1020px';
+                            clonedCert.style.height     = '700px';
+                        }
+                    });
+
+                    cert.style.animation = '';
+
+                    const link = document.createElement('a');
+                    link.download = 'Ashara-Azam-' + name.replace(/\s+/g, '-') + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
                 } catch (err) {
                     console.error('Certificate generation failed:', err);
-                    errorDiv.textContent   = 'Failed to generate certificate. Please try again.';
-                    errorDiv.style.display = 'block';
+                    errorMsg.textContent  = 'Could not generate certificate. Please try again.';
+                    errorMsg.style.display = 'block';
                 } finally {
-                    setLoading(false);
-                    validate();
+                    loader.classList.remove('visible');
+                    downloadBtn.disabled = false;
                 }
             });
-        });
+        })();
     </script>
 </body>
 </html>
