@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Ashara Azam - Dohad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #b08d57;
+            --dark-green: #004d40;
+            --maroon: #8b0000;
+            --cream: #faf8f3;
+            --deep-black: #0d0d0d;
+        }
+
+        /* ── Particle canvas ── */
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(160deg, #0d1a15 0%, #041410 50%, #140505 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Hero Banner ── */
+        .hero {
+            width: 100%;
+            padding: 56px 20px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(176,141,87,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Decorative top line */
+        .hero-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .hero-line span {
+            display: inline-block;
+            height: 1px;
+            width: 80px;
+            background: linear-gradient(to right, transparent, var(--gold));
+        }
+        .hero-line span:last-child {
+            background: linear-gradient(to left, transparent, var(--gold));
+        }
+        .hero-line-diamond {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            transform: rotate(45deg);
+            animation: pulse-diamond 2.4s ease-in-out infinite;
+        }
+        @keyframes pulse-diamond {
+            0%, 100% { box-shadow: 0 0 4px 1px rgba(176,141,87,0.4); }
+            50% { box-shadow: 0 0 14px 4px rgba(176,141,87,0.85); }
+        }
+
+        /* Ya Husain text */
+        .ya-husain {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 10vw, 88px);
+            color: var(--gold);
+            letter-spacing: 4px;
+            margin: 0;
+            animation: glow-text 3s ease-in-out infinite;
+            text-shadow: 0 0 18px rgba(176,141,87,0.35);
+            line-height: 1.1;
+        }
+        @keyframes glow-text {
+            0%, 100% { text-shadow: 0 0 18px rgba(176,141,87,0.35), 0 0 40px rgba(176,141,87,0.1); }
+            50% { text-shadow: 0 0 32px rgba(176,141,87,0.75), 0 0 70px rgba(176,141,87,0.3), 0 0 100px rgba(176,141,87,0.12); }
+        }
+
+        .ya-husain-arabic {
+            font-size: clamp(32px, 8vw, 66px);
+            direction: rtl;
+            display: block;
+            color: #c9a96e;
+            margin-top: 4px;
+            animation: glow-text 3s ease-in-out infinite 0.5s;
+        }
+
+        .hero-tagline {
+            color: rgba(255,255,255,0.7);
+            font-size: clamp(12px, 2.5vw, 15px);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 20px 0 0;
+        }
+
+        /* ── Candle ── */
+        .candle-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 32px;
+            margin: 36px 0 16px;
+        }
+        .candle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .flame-wrap {
+            position: relative;
+            width: 22px;
+            height: 44px;
+        }
+        .flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 38px;
+            background: radial-gradient(ellipse at 50% 90%, #fff 0%, #ffe566 18%, #ffaa00 45%, #ff6600 72%, transparent 100%);
+            border-radius: 50% 50% 30% 30%;
+            filter: blur(1.5px);
+            transform-origin: bottom center;
+            animation: flicker 1.8s ease-in-out infinite;
+        }
+        .flame::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 14px;
+            background: radial-gradient(ellipse, #fff 0%, rgba(255,255,180,0.7) 60%, transparent 100%);
+            border-radius: 50%;
+        }
+        .flame-glow {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background: radial-gradient(ellipse, rgba(255,170,0,0.25) 0%, transparent 70%);
+            animation: flicker-glow 1.8s ease-in-out infinite;
+        }
+        @keyframes flicker {
+            0%,100% { transform: translateX(-50%) scaleX(1) scaleY(1) rotate(-1deg); }
+            25%      { transform: translateX(-50%) scaleX(0.88) scaleY(1.08) rotate(1.5deg); }
+            50%      { transform: translateX(-50%) scaleX(1.04) scaleY(0.96) rotate(-0.5deg); }
+            75%      { transform: translateX(-50%) scaleX(0.93) scaleY(1.05) rotate(2deg); }
+        }
+        @keyframes flicker-glow {
+            0%,100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+            50%      { opacity: 1;   transform: translateX(-50%) scale(1.25); }
+        }
+        .candle-body {
+            width: 18px;
+            height: 52px;
+            background: linear-gradient(to right, #e8d5c4, #f5ede4 40%, #d4b89a);
+            border-radius: 2px 2px 4px 4px;
+            position: relative;
+        }
+        .candle-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 6px;
+            background: #555;
+            border-radius: 1px;
+        }
+        .candle-wax {
+            width: 24px;
+            height: 6px;
+            background: radial-gradient(ellipse, #f5ede4 60%, #d4b89a 100%);
+            border-radius: 50% 50% 0 0;
+            margin-top: -1px;
+        }
+        /* side candles slightly smaller */
+        .candle.small .candle-body { height: 36px; width: 14px; }
+        .candle.small .flame { width: 13px; height: 28px; }
+        .candle.small .flame-glow { width: 30px; height: 36px; }
+        .candle.small .candle-wax { width: 18px; }
+        .candle.small .flame-wrap { width: 16px; height: 32px; }
+        .candle.small .flame { animation-delay: 0.4s; }
+
+        /* ── Info Cards ── */
+        .info-section {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 48px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .info-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(176,141,87,0.22);
+            border-radius: 12px;
+            padding: 28px 24px;
+            color: #e8e0d0;
+            position: relative;
+            overflow: hidden;
+            animation: fade-up 0.7s ease both;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .info-card:hover {
+            border-color: rgba(176,141,87,0.55);
+            box-shadow: 0 0 24px rgba(176,141,87,0.1);
+        }
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+        .info-card:nth-child(2) { animation-delay: 0.15s; }
+        .info-card:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .info-card-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+            filter: drop-shadow(0 0 6px rgba(176,141,87,0.5));
+        }
+        .info-card h3 {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            margin: 0 0 10px;
+            letter-spacing: 0.5px;
+        }
+        .info-card p {
+            font-size: 13.5px;
+            line-height: 1.75;
+            margin: 0;
+            color: rgba(232,224,208,0.85);
+        }
+
+        /* ── Quote Band ── */
+        .quote-band {
+            width: 100%;
+            background: rgba(176,141,87,0.07);
+            border-top: 1px solid rgba(176,141,87,0.15);
+            border-bottom: 1px solid rgba(176,141,87,0.15);
+            padding: 28px 20px;
+            text-align: center;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+        }
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(15px, 3.5vw, 20px);
+            color: var(--gold);
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto 8px;
+            animation: glow-text 4s ease-in-out infinite;
+        }
+        .quote-attr {
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto 32px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .section-divider hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid rgba(176,141,87,0.25);
+        }
+        .section-divider-text {
+            color: var(--gold);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Certificate wrapper keeps padding for spacing from hero */
+        .cert-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px 20px;
+            box-sizing: border-box;
+        }
+        #certificate {
+            width: 100%;
+            max-width: 760px;
+            aspect-ratio: 1020 / 700;
+            position: relative;
+            z-index: 0;
+            box-shadow: 0 0 40px rgba(176,141,87,0.15), 0 0 80px rgba(0,0,0,0.6);
+            padding: 75px 100px 40px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+            animation: cert-reveal 0.9s ease both 0.3s;
+        }
+        @keyframes cert-reveal {
+            from { opacity: 0; transform: scale(0.97); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        .cert-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: fill;
+        }
+        .cert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            margin-top: 10px;
+        }
+        .cert-header-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+        }
+        .cert-header-title {
+            flex: 1;
+            text-align: center;
+        }
+        .main-title {
+            color: #8b0000;
+            font-size: 27px;
+            letter-spacing: 2px;
+            margin: 4px 0;
+            text-transform: uppercase;
+            font-weight: bolder;
+        }
+        .sub-text {
+            font-style: italic;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 10px;
+            margin-top: 4px;
+        }
+        #display-name {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: 28px;
+            text-transform: uppercase;
+            margin: 4px 0;
+        }
+        #display-its {
+            font-weight: bold;
+            color: var(--dark-green);
+            font-size: 18px;
+            margin-bottom: 11px;
+            margin-top: 4px;
+        }
+        .niyyat-intro {
+            margin: 8px 0;
+            font-weight: bold;
+        }
+        .niyyat-list {
+            text-align: left;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #333;
+        }
+        .niyyat-list ul {
+            list-style: none;
+            margin-bottom: 10px;
+            padding-left: 0;
+        }
+        .niyyat-list .star {
+            color: var(--gold);
+            margin-right: 4px;
+        }
+        #blank_space {
+            display: block;
+            height: 0.1px;
+            padding: 0%;
+            margin: 0%;
+        }
+        .footer {
+            margin-top: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--dark-green);
+        }
+        .input-form {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(176,141,87,0.22);
+            padding: 24px 20px;
+            border-radius: 12px;
+            margin-top: 36px;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+            backdrop-filter: blur(6px);
+            animation: fade-up 0.8s ease both 0.5s;
+        }
+        .input-form::before {
+            content: '';
+            display: block;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: -24px -20px 20px;
+            border-radius: 12px 12px 0 0;
+        }
+        .input-form h3 {
+            font-size: 20px;
+            margin: 0 0 16px;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.5px;
+        }
+        .input-form label {
+            color: rgba(232,224,208,0.9);
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 6px 0 14px;
+            border: 1px solid rgba(176,141,87,0.3);
+            border-radius: 6px;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.06);
+            color: #f0e8d8;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            outline: none;
+        }
+        input::placeholder { color: rgba(255,255,255,0.25); }
+        input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(176,141,87,0.12);
+        }
+        button {
+            background: linear-gradient(135deg, #004d40 0%, #00695c 100%);
+            color: white;
+            padding: 12px 18px;
+            border: 1px solid rgba(176,141,87,0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+            transition: background 0.25s, box-shadow 0.25s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #005f4f 0%, #007c6b 100%);
+            box-shadow: 0 0 14px rgba(0,105,92,0.4);
+        }
+        button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
+        .button-loading {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button-loading::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .loader-overlay.visible {
+            display: flex;
+        }
+        .loader-card {
+            width: min(100%, 320px);
+            background: rgba(13,26,21,0.95);
+            border: 1px solid rgba(176,141,87,0.3);
+            border-radius: 14px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 14px;
+            border: 4px solid rgba(176,141,87,0.18);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .loader-text {
+            color: var(--gold);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .loader-subtext {
+            color: rgba(232,224,208,0.65);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .required-star {
+            color: red;
+            margin-left: 4px;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @media (max-width: 840px) {
+            #certificate {
+                padding: 8.2vw 12vw 5vw;
+            }
+            .main-title {
+                font-size: 4.1vw;
+                margin: 1.1vw 0;
+            }
+            .sub-text {
+                font-size: 2.3vw;
+                margin-bottom: 1.9vw;
+            }
+            #display-name {
+                font-size: 3.8vw;
+                margin: 0.8vw 0;
+            }
+            #display-its {
+                font-size: 2.5vw;
+                margin-bottom: 1.5vw;
+            }
+            .niyyat-list {
+                font-size: 2.1vw;
+                line-height: 1.55;
+            }
+            .niyyat-list ul {
+                margin: 1.1vw 0 0.4vw 0;
+                padding-left: 0;
+            }
+            #blank_space {
+                height: 1vw;
+            }
+            .footer {
+                font-size: 1.9vw;
+                margin-top: 0;
+            }
+            .cert-header-logo {
+                width: 9vw;
+                height: 9vw;
+            }
+        }
+        @media (max-width: 480px) {
+            #certificate {
+                padding: 8.2vw 11vw 5vw;
+            }
+            .main-title {
+                font-size: 3.4vw;
+                letter-spacing: 1px;
+                margin: 0.8vw 0;
+            }
+            .sub-text {
+                font-size: 2.1vw;
+                margin-bottom: 1.3vw;
+            }
+            #display-name {
+                font-size: 3.2vw;
+                margin: 0.4vw 0;
+            }
+            #display-its {
+                font-size: 2.1vw;
+                margin-bottom: 0.9vw;
+            }
+            .niyyat-list {
+                font-size: 2vw;
+                line-height: 1.4;
+            }
+            .niyyat-list ul {
+                margin: 0.8vw 0 0.4vw 0;
+                padding-left: 0;
+            }
+            #blank_space {
+                height: 1vw;
+            }
+            .footer {
+                font-size: 1.7vw;
+            }
+            .cert-header-logo {
+                width: 8vw;
+                height: 8vw;
+            }
+            .input-form {
+                padding: 13px;
+                margin-top: 26px;
+                max-width: 330px;
+            }
+            .input-form h3 {
+                font-size: 17px;
+                margin: 5px 0 15px 0;
+            }
+            .input-form label {
+                font-size: 14px;
+            }
+            input {
+                padding: 8px;
+                font-size: 14px;
+            }
+            button {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- ── Hero Banner ── -->
+    <section class="hero">
+        <div class="hero-line">
+            <span></span>
+            <div class="hero-line-diamond"></div>
+            <span></span>
+        </div>
+
+        <div class="candle-row">
+            <div class="candle small">
+                <div class="flame-wrap">
+                    <div class="flame-glow"></div>
+                    <div class="flame"></div>
+                </div>
+                <div class="candle-wax"></div>
+                <div class="candle-body"></div>
+            </div>
+            <div class="candle">
+                <div class="flame-wrap">
+                    <div class="flame-glow"></div>
+                    <div class="flame"></div>
+                </div>
+                <div class="candle-wax"></div>
+                <div class="candle-body"></div>
+            </div>
+            <div class="candle small">
+                <div class="flame-wrap">
+                    <div class="flame-glow"></div>
+                    <div class="flame"></div>
+                </div>
+                <div class="candle-wax"></div>
+                <div class="candle-body"></div>
+            </div>
+        </div>
+
+        <h1 class="ya-husain">
+            Ya Husain
+            <span class="ya-husain-arabic">يا حسين</span>
+        </h1>
+        <p class="hero-tagline">Ashara Mubaraka &nbsp;·&nbsp; 1448H</p>
+
+        <div class="hero-line" style="margin-top:28px; margin-bottom:0;">
+            <span></span>
+            <div class="hero-line-diamond"></div>
+            <span></span>
+        </div>
+    </section>
+
+    <!-- ── Quote ── -->
+    <div class="quote-band">
+        <p class="quote-text">"Every day is Ashura and every land is Karbala."</p>
+        <p class="quote-attr">— Attributed to Imam Ja'far al-Sadiq (a.s.)</p>
+    </div>
+
+    <!-- ── Info Cards ── -->
+    <div class="info-section">
+        <div class="info-card">
+            <span class="info-card-icon">☪</span>
+            <h3>Imam Husain ibn Ali (a.s.)</h3>
+            <p>The grandson of Prophet Muhammad (S.A.W.S.) and son of Imam Ali (a.s.) and Bibi Fatema al-Zahra (a.s.). He stood alone against the armies of Yazid at the plains of Karbala on 10 Muharram 61 AH, sacrificing his life to uphold the truth of Islam — "Hayhaat minna zilla" (Never shall we accept humiliation).</p>
+        </div>
+        <div class="info-card">
+            <span class="info-card-icon">🕌</span>
+            <h3>Ashara Mubaraka</h3>
+            <p>The ten sacred days of Muharram observed by the Dawoodi Bohra community in the presence of Syedna Mufaddal Saifuddin (T.U.S.), the 53rd Dai al-Mutlaq. Mumineen gather from across the world to hear his bayaan, to weep for Imam Husain (a.s.), and to renew their bond with the Ahlul Bayt.</p>
+        </div>
+        <div class="info-card">
+            <span class="info-card-icon">✦</span>
+            <h3>The Azam (Pledge)</h3>
+            <p>During Ashara, every Mumin makes a firm Niyyat — an intention to dedicate these days entirely to Imam Husain (a.s.). Closing worldly affairs, seeking leave from work and studies, performing khidmat, observing Shariat, and giving voice to Noha and Aweel are acts of love for the Imam.</p>
+        </div>
+    </div>
+
+    <!-- ── Section divider ── -->
+    <div class="section-divider">
+        <hr><span class="section-divider-text">Your Certificate</span><hr>
+    </div>
+
+    <!-- ── Certificate ── -->
+    <div class="cert-wrapper">
+    <div id="certificate">
+        <img src="certificate-v2.png" alt="background" class="cert-bg">
+
+        <div class="cert-header">
+            <div class="cert-header-title">
+                <h1 class="main-title">My Ashara Azam</h1>
+                <p class="sub-text">Acknowledging the sincere Niyyat of</p>
+            </div>
+        </div>
+
+        <h2 id="display-name"></h2>
+        <p id="display-its"></p>
+        <p class="niyyat-intro">Mein em azam karoon choon ke Ashara Mubaraka ma mein :</p>
+        <div class="niyyat-list">
+            <ul>
+                <li><span class="star">★</span>Maro Business 100% close raakhis.</li>
+                <li><span class="star">★</span>Job / Studies si Raza lai lais.</li>
+                <li><span class="star">★</span>Noha - Aweel ne zahir karis.</li>
+                <li><span class="star">★</span>Jem raza thase, Khidmat karis.</li>
+                <li><span class="star">★</span>Shariat ni pabandi karis, Namaz waqt par adda karis.</li>
+            </ul>
+        </div>
+        <div id="blank_space"></div>
+        <div class="footer">
+            <p style="margin: 0;">TOLOBA UL KULLIYAT IL MUMENOON - DOHAD</p>
+            <p style="margin: 0;">DATE: <span id="certificate-current-date"></span></p>
+        </div>
+    </div>
+
+    <div class="input-form">
+        <h3>Pledge your Niyyat</h3>
+        <label for="userName">Full Name <span class="required-star">*</span></label>
+        <input type="text" id="userName" placeholder="Enter your full name">
+
+        <label for="userITS">ITS ID <span class="required-star">*</span></label>
+        <input type="text" id="userITS" placeholder="8-digit ITS number">
+
+        <div id="errorMessage" style="color: #ff7070; font-size: 12px; margin-top: 5px; display: none;"></div>
+
+        <button id="downloadButton" disabled>Download My Certificate</button>
+    </div>
+    </div>
+
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-card">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Preparing your certificate...</div>
+            <div class="loader-subtext">Please wait while we save your pledge and generate the download.</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        /* ── Particle background ── */
+        (function () {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, particles = [];
+            const COUNT = 55;
+
+            function resize() {
+                W = canvas.width  = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function rand(a, b) { return a + Math.random() * (b - a); }
+
+            for (let i = 0; i < COUNT; i++) {
+                particles.push({
+                    x: rand(0, W),  y: rand(0, H),
+                    r: rand(0.8, 2.4),
+                    vx: rand(-0.18, 0.18), vy: rand(-0.35, -0.08),
+                    alpha: rand(0.25, 0.75),
+                    flicker: rand(0, Math.PI * 2),
+                    flickerSpeed: rand(0.015, 0.045),
+                    gold: Math.random() < 0.4,
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                particles.forEach(p => {
+                    p.flicker += p.flickerSpeed;
+                    const a = p.alpha * (0.65 + 0.35 * Math.sin(p.flicker));
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.gold
+                        ? `rgba(176,141,87,${a})`
+                        : `rgba(255,255,255,${a * 0.6})`;
+                    ctx.fill();
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.y < -10) { p.y = H + 10; p.x = rand(0, W); }
+                    if (p.x < -10) p.x = W + 10;
+                    if (p.x > W + 10) p.x = -10;
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userNameInput = document.getElementById('userName');
+            const userITSInput = document.getElementById('userITS');
+            const downloadButton = document.getElementById('downloadButton');
+            const loaderOverlay = document.getElementById('loaderOverlay');
+            const displayName = document.getElementById('display-name');
+            const displayITS = document.getElementById('display-its');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const certificateCurrentDateSpan = document.getElementById('certificate-current-date');
+            const defaultButtonText = 'Download My Certificate';
+            let isDownloading = false;
+
+            const setLoadingState = (loading) => {
+                isDownloading = loading;
+                downloadButton.disabled = loading || downloadButton.disabled;
+                downloadButton.textContent = loading ? 'Generating Certificate...' : defaultButtonText;
+                downloadButton.classList.toggle('button-loading', loading);
+                loaderOverlay.classList.toggle('visible', loading);
+                loaderOverlay.setAttribute('aria-hidden', loading ? 'false' : 'true');
+            };
+
+            const checkInputs = () => {
+                const name = userNameInput.value.trim();
+                const its = userITSInput.value.trim();
+                const itsRegex = /^\d{8}$/;
+                let isItsValid = false;
+
+                if (its === '') {
+                    errorMessageDiv.style.display = 'none';
+                } else if (!itsRegex.test(its)) {
+                    errorMessageDiv.textContent = 'ITS ID must be exactly 8 numeric digits.';
+                    errorMessageDiv.style.display = 'block';
+                } else {
+                    isItsValid = true;
+                    errorMessageDiv.style.display = 'none';
+                }
+
+                if (displayName) displayName.textContent = name;
+                if (displayITS) displayITS.textContent = its ? "ITS ID: " + its : "";
+                downloadButton.disabled = isDownloading || !(name && isItsValid);
+            };
+
+            certificateCurrentDateSpan.textContent = new Date().toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+
+            checkInputs();
+            userNameInput.addEventListener('input', checkInputs);
+            userITSInput.addEventListener('input', checkInputs);
+
+            downloadButton.addEventListener('click', async () => {
+                const name = userNameInput.value.trim();
+                const its = userITSInput.value.trim();
+                setLoadingState(true);
+
+                try {
+                    // Optional: Replace with your own Google Apps Script URL to save pledges
+                    // const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+                    // try {
+                    //     await fetch(GOOGLE_SCRIPT_URL, {
+                    //         method: 'POST',
+                    //         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    //         body: JSON.stringify({ name, its }),
+                    //     });
+                    // } catch (err) {
+                    //     console.error('Failed to save pledge:', err);
+                    // }
+
+                    const certificateElement = document.querySelector("#certificate");
+                    const bgImage = document.querySelector(".cert-bg");
+
+                    bgImage.style.display = 'none';
+                    const originalBoxShadow = certificateElement.style.boxShadow;
+                    certificateElement.style.boxShadow = 'none';
+
+                    const targetWidth = 2040;
+                    const targetHeight = 1400;
+                    const desktopLayoutWidth = 760;
+                    const scaleFactor = targetWidth / desktopLayoutWidth;
+
+                    const textCanvas = await html2canvas(certificateElement, {
+                        scale: scaleFactor,
+                        useCORS: true,
+                        windowWidth: 1024,
+                        backgroundColor: null
+                    });
+
+                    bgImage.style.display = '';
+                    certificateElement.style.boxShadow = originalBoxShadow;
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(bgImage, 0, 0, targetWidth, targetHeight);
+                    ctx.drawImage(textCanvas, 0, 0, targetWidth, targetHeight);
+
+                    const link = document.createElement('a');
+                    link.download = 'Ashara-Azam-Certificate-Dohad.png';
+                    link.href = canvas.toDataURL("image/png");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } finally {
+                    setLoadingState(false);
+                    checkInputs();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
