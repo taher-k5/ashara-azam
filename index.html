@@ -127,7 +127,6 @@
             </div>
 
             <h2 id="display-name" class="font-display text-gold text-[28px] uppercase my-1"></h2>
-            <p id="display-its" class="font-bold text-dark-green text-[18px] mb-[11px] mt-1"></p>
             <p class="niyyat-intro my-2 font-bold">Mein em azam karoon choon ke Ashara Mubaraka ma mein :</p>
             <div class="niyyat-list text-left block w-fit mx-auto text-[15px] leading-7 text-[#333]">
                 <ul class="list-none mb-2.5 pl-0">
@@ -154,9 +153,12 @@
             <input class="w-full px-3 py-2.5 mt-1.5 mb-3.5 border border-[rgba(176,141,87,0.3)] rounded-[6px] box-border bg-white/[0.06] text-[#f0e8d8] font-sans text-[14px] transition-[border-color,box-shadow] duration-[250ms] outline-none placeholder:text-white/25 focus:border-gold focus:shadow-[0_0_0_3px_rgba(176,141,87,0.12)]"
                    type="text" id="userName" placeholder="Enter your full name">
 
-            <label class="text-[rgba(232,224,208,0.9)] text-[13px] tracking-[0.3px]" for="userITS">ITS ID</label>
-            <input class="w-full px-3 py-2.5 mt-1.5 mb-3.5 border border-[rgba(176,141,87,0.3)] rounded-[6px] box-border bg-white/[0.06] text-[#f0e8d8] font-sans text-[14px] transition-[border-color,box-shadow] duration-[250ms] outline-none placeholder:text-white/25 focus:border-gold focus:shadow-[0_0_0_3px_rgba(176,141,87,0.12)]"
-                   type="text" id="userITS" placeholder="8-digit ITS number (optional)">
+            <label class="text-[rgba(232,224,208,0.9)] text-[13px] tracking-[0.3px]" for="userITS">
+                ITS ID <span class="text-red-500 ml-1">*</span>
+            </label>
+            <input class="w-full px-3 py-2.5 mt-1.5 mb-1 border border-[rgba(176,141,87,0.3)] rounded-md box-border bg-white/6 text-[#f0e8d8] font-sans text-[14px] transition-[border-color,box-shadow] duration-250 outline-none placeholder:text-white/25 focus:border-gold focus:shadow-[0_0_0_3px_rgba(176,141,87,0.12)]"
+                   type="text" id="userITS" placeholder="8-digit ITS number" maxlength="8">
+            <span id="itsHint" class="block text-[11px] mb-2.5 text-[#ff7070] min-h-4"></span>
 
             <div id="errorMessage" class="text-[#ff7070] text-[12px] mt-1.5 hidden"></div>
 
@@ -239,7 +241,6 @@
             const downloadBtn = document.getElementById('downloadButton');
             const errorMsg    = document.getElementById('errorMessage');
             const displayName = document.getElementById('display-name');
-            const displayITS  = document.getElementById('display-its');
             const loader      = document.getElementById('loaderOverlay');
             const dateEl      = document.getElementById('certificate-current-date');
 
@@ -248,19 +249,56 @@
                 day: 'numeric', month: 'long', year: 'numeric'
             });
 
-            // Mirror inputs into the certificate preview and toggle the button
+            // Mirror name into certificate preview; require both name + valid ITS
             function syncCertificate() {
-                const name = nameInput.value.trim();
-                const its  = itsInput.value.trim();
+                const name     = nameInput.value.trim();
+                const its      = itsInput.value.trim();
+                const itsValid = /^\d{8}$/.test(its);
+
                 displayName.textContent = name;
-                displayITS.textContent  = its ? 'ITS: ' + its : '';
-                downloadBtn.disabled    = !name;
+                downloadBtn.disabled    = !(name && itsValid);
+
+                // Real-time ITS feedback
+                if (its.length === 0) {
+                    itsInput.style.borderColor = '';
+                    itsHint.textContent = '';
+                } else if (itsValid) {
+                    itsInput.style.borderColor = '#4caf50';
+                    itsHint.textContent = '';
+                } else {
+                    itsInput.style.borderColor = '#ff7070';
+                    itsHint.textContent = /\D/.test(its)
+                        ? 'Numbers only.'
+                        : `${its.length}/8 digits`;
+                }
             }
 
+            const itsHint = document.getElementById('itsHint');
             nameInput.addEventListener('input', syncCertificate);
             itsInput.addEventListener('input', syncCertificate);
 
+            const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGpBbE4WlhDZSpuDlRZOyhuobK_PjkKk1z52VwUe9dVKyCw29Lw_N_p3IOFRFZoBLhdg/exec';
+
+            async function savePledge(name, its) {
+                // no-cors avoids preflight; Apps Script still receives the body
+                await fetch(SHEET_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ name, its }),
+                });
+            }
+
             downloadBtn.addEventListener('click', async function () {
+                const name = nameInput.value.trim();
+                const its  = itsInput.value.trim();
+
+                if (!/^\d{8}$/.test(its)) {
+                    errorMsg.textContent = 'ITS ID must be exactly 8 digits.';
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+
                 errorMsg.classList.add('hidden');
 
                 loader.classList.remove('hidden');
@@ -308,7 +346,8 @@
 
                     cert.style.animation = '';
 
-                    const name = nameInput.value.trim();
+                    savePledge(name, its);
+
                     const link = document.createElement('a');
                     link.download = 'Ashara-Azam-' + name.replace(/\s+/g, '-') + '.png';
                     link.href = canvas.toDataURL('image/png');
