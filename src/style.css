@@ -1,13 +1,25 @@
 @import "tailwindcss";
 
 /* ── Mobile base fixes ── */
+/* iOS Safari needs exactly ONE of html/body to be the unrestricted scroll root.
+   Setting overflow on both (even 'clip') locks the page solid on mobile.
+   Solution: nothing on <html>, only overflow-x: hidden on <body>. */
 html {
-  overflow-x: clip; /* 'hidden' on <html> kills iOS Safari scroll; 'clip' does not */
+  scroll-behavior: smooth;
 }
 body {
-  overflow-x: clip;
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y;
+}
+
+/* Canvas covers the full viewport — belt-and-suspenders to ensure it never
+   intercepts touch events on any browser/OS version. */
+#particle-canvas {
+  pointer-events: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Prevent iOS Safari from zooming on input focus */
