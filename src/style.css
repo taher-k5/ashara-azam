@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* ── Mobile base fixes ── */
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent iOS Safari from zooming on input focus */
+@media (max-width: 768px) {
+  input { font-size: 16px !important; }
+}
+
+/* Scale alam row down so flags don't overflow on small screens */
+@media (max-width: 520px) {
+  .alam-row {
+    transform: scale(0.72);
+    transform-origin: center top;
+    margin-bottom: -38px;
+  }
+}
+
 /* ── Custom theme tokens ── */
 @theme {
   --color-gold: #b08d57;
