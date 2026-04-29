@@ -2,11 +2,12 @@
 
 /* ── Mobile base fixes ── */
 html {
-  overflow-x: hidden;
+  overflow-x: clip; /* 'hidden' on <html> kills iOS Safari scroll; 'clip' does not */
 }
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
 }
 
 /* Prevent iOS Safari from zooming on input focus */
