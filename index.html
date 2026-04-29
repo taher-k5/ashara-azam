@@ -5,824 +5,175 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Ashara Azam - Dohad</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        :root {
-            --gold: #b08d57;
-            --dark-green: #004d40;
-            --maroon: #8b0000;
-            --cream: #faf8f3;
-            --deep-black: #0d0d0d;
-        }
-
-        /* ── Particle canvas ── */
-        #particle-canvas {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(160deg, #0d1a15 0%, #041410 50%, #140505 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ── Hero Banner ── */
-        .hero {
-            width: 100%;
-            padding: 56px 20px 44px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, rgba(176,141,87,0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* Decorative top line */
-        .hero-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .hero-line span {
-            display: inline-block;
-            height: 1px;
-            width: 80px;
-            background: linear-gradient(to right, transparent, var(--gold));
-        }
-        .hero-line span:last-child {
-            background: linear-gradient(to left, transparent, var(--gold));
-        }
-        .hero-line-diamond {
-            width: 8px;
-            height: 8px;
-            background: var(--gold);
-            transform: rotate(45deg);
-            animation: pulse-diamond 2.4s ease-in-out infinite;
-        }
-        @keyframes pulse-diamond {
-            0%, 100% { box-shadow: 0 0 4px 1px rgba(176,141,87,0.4); }
-            50% { box-shadow: 0 0 14px 4px rgba(176,141,87,0.85); }
-        }
-
-        /* Ya Husain text */
-        .ya-husain {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(42px, 10vw, 88px);
-            color: var(--gold);
-            letter-spacing: 4px;
-            margin: 0;
-            animation: glow-text 3s ease-in-out infinite;
-            text-shadow: 0 0 18px rgba(176,141,87,0.35);
-            line-height: 1.1;
-        }
-        @keyframes glow-text {
-            0%, 100% { text-shadow: 0 0 18px rgba(176,141,87,0.35), 0 0 40px rgba(176,141,87,0.1); }
-            50% { text-shadow: 0 0 32px rgba(176,141,87,0.75), 0 0 70px rgba(176,141,87,0.3), 0 0 100px rgba(176,141,87,0.12); }
-        }
-
-        .ya-husain-arabic {
-            font-size: clamp(32px, 8vw, 66px);
-            direction: rtl;
-            display: block;
-            color: #c9a96e;
-            margin-top: 4px;
-            animation: glow-text 3s ease-in-out infinite 0.5s;
-        }
-
-        .hero-tagline {
-            color: rgba(255,255,255,0.7);
-            font-size: clamp(12px, 2.5vw, 15px);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin: 20px 0 0;
-        }
-
-        /* ── Alam (Standard / Flag) ── */
-        .alam-row {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 52px;
-            margin: 32px 0 18px;
-        }
-        .alam {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* SVG finial ornament */
-        .alam-ornament {
-            display: block;
-            flex-shrink: 0;
-            margin-bottom: 2px;
-            animation: ornament-glow 3s ease-in-out infinite;
-        }
-        .alam-husain .alam-ornament { width: 34px; height: 44px; }
-        .alam-abbas  .alam-ornament { width: 22px; height: 28px; animation-delay: 0.7s; }
-
-        @keyframes ornament-glow {
-            0%, 100% { filter: drop-shadow(0 0 3px rgba(176,141,87,0.35)); }
-            50%       { filter: drop-shadow(0 0 14px rgba(176,141,87,0.95)) drop-shadow(0 0 26px rgba(176,141,87,0.28)); }
-        }
-
-        /* Pole */
-        .alam-pole {
-            width: 6px;
-            background: linear-gradient(to right, #b89040, #f0d080 38%, #b08030 68%, #8a6020);
-            border-radius: 1px;
-            position: relative;
-            margin-top: 5px;
-        }
-        .alam-husain .alam-pole { height: 130px; }
-        .alam-abbas  .alam-pole { height: 95px; }
-
-        /* Base ring */
-        .alam-base {
-            width: 18px;
-            height: 7px;
-            background: linear-gradient(to right, #7a5010, #f0d080 50%, #7a5010);
-            border-radius: 0 0 4px 4px;
-        }
-
-        /* Flag pennant - sits to the right of the pole */
-        .alam-flag {
-            position: absolute;
-            top: 4px;
-            left: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform-origin: left center;
-            animation: flag-wave 4.5s ease-in-out infinite;
-        }
-        .alam-husain .alam-flag {
-            width: 74px;
-            height: 52px;
-            background: linear-gradient(150deg, #6b0000 0%, #9a0000 55%, #7a0000 100%);
-            clip-path: polygon(0 0, 100% 0, 86% 50%, 100% 100%, 0 100%);
-            border-left: 2px solid rgba(176,141,87,0.55);
-        }
-        .alam-abbas .alam-flag {
-            width: 54px;
-            height: 38px;
-            background: linear-gradient(150deg, #0c0c0c 0%, #1e1e1e 55%, #131313 100%);
-            clip-path: polygon(0 0, 100% 0, 86% 50%, 100% 100%, 0 100%);
-            border-left: 2px solid rgba(176,141,87,0.45);
-            box-shadow: inset 0 0 10px rgba(176,141,87,0.06), 0 0 5px rgba(176,141,87,0.1);
-        }
-
-        .alam-text {
-            color: var(--gold);
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            direction: rtl;
-            text-align: center;
-            text-shadow: 0 0 6px rgba(176,141,87,0.5);
-            letter-spacing: 0.5px;
-            line-height: 1.2;
-        }
-        .alam-husain .alam-text { font-size: 12px; }
-        .alam-abbas  .alam-text { font-size: 10.5px; }
-
-        /* Second Abbas alam flag waves slightly out of phase */
-        .alam-row .alam-abbas:last-child .alam-flag { animation-delay: 0.8s; }
-
-        @keyframes flag-wave {
-            0%, 100% { transform: skewX(0deg)   scaleX(1);    }
-            28%       { transform: skewX(-7deg)  scaleX(0.91); }
-            55%       { transform: skewX(-2deg)  scaleX(0.97); }
-            78%       { transform: skewX(-6deg)  scaleX(0.92); }
-        }
-
-        /* ── Info Cards ── */
-        .info-section {
-            width: 100%;
-            max-width: 900px;
-            padding: 0 20px 48px;
-            box-sizing: border-box;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-        }
-        .info-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(176,141,87,0.22);
-            border-radius: 12px;
-            padding: 28px 24px;
-            color: #e8e0d0;
-            position: relative;
-            overflow: hidden;
-            animation: fade-up 0.7s ease both;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .info-card:hover {
-            border-color: rgba(176,141,87,0.55);
-            box-shadow: 0 0 24px rgba(176,141,87,0.1);
-        }
-        .info-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
-        }
-        .info-card:nth-child(2) { animation-delay: 0.15s; }
-        .info-card:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes fade-up {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .info-card-icon {
-            font-size: 28px;
-            margin-bottom: 12px;
-            display: block;
-            filter: drop-shadow(0 0 6px rgba(176,141,87,0.5));
-        }
-        .info-card h3 {
-            color: var(--gold);
-            font-family: 'Playfair Display', serif;
-            font-size: 17px;
-            margin: 0 0 10px;
-            letter-spacing: 0.5px;
-        }
-        .info-card p {
-            font-size: 13.5px;
-            line-height: 1.75;
-            margin: 0;
-            color: rgba(232,224,208,0.85);
-        }
-
-        /* ── Quote Band ── */
-        .quote-band {
-            width: 100%;
-            background: rgba(176,141,87,0.07);
-            border-top: 1px solid rgba(176,141,87,0.15);
-            border-bottom: 1px solid rgba(176,141,87,0.15);
-            padding: 28px 20px;
-            text-align: center;
-            box-sizing: border-box;
-            margin-bottom: 40px;
-        }
-        .quote-text {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(15px, 3.5vw, 20px);
-            color: var(--gold);
-            font-style: italic;
-            max-width: 700px;
-            margin: 0 auto 8px;
-            animation: glow-text 4s ease-in-out infinite;
-        }
-        .quote-attr {
-            font-size: 12px;
-            color: rgba(255,255,255,0.45);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* ── Divider ── */
-        .section-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            width: 100%;
-            max-width: 760px;
-            margin: 0 auto 32px;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .section-divider hr {
-            flex: 1;
-            border: none;
-            border-top: 1px solid rgba(176,141,87,0.25);
-        }
-        .section-divider-text {
-            color: var(--gold);
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        /* Certificate wrapper keeps padding for spacing from hero */
-        .cert-wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 20px 20px;
-            box-sizing: border-box;
-        }
-        #certificate {
-            width: 100%;
-            max-width: 760px;
-            aspect-ratio: 1020 / 700;
-            position: relative;
-            z-index: 0;
-            box-shadow: 0 0 40px rgba(176,141,87,0.15), 0 0 80px rgba(0,0,0,0.6);
-            padding: 75px 100px 40px;
-            box-sizing: border-box;
-            text-align: center;
-            overflow: hidden;
-            animation: cert-reveal 0.9s ease both 0.3s;
-        }
-        @keyframes cert-reveal {
-            from { opacity: 0; transform: scale(0.97); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-        .cert-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            object-fit: fill;
-        }
-        .cert-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            margin-top: 10px;
-        }
-        .cert-header-logo {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-        }
-        .cert-header-title {
-            flex: 1;
-            text-align: center;
-        }
-        .main-title {
-            color: #8b0000;
-            font-size: 27px;
-            letter-spacing: 2px;
-            margin: 4px 0;
-            text-transform: uppercase;
-            font-weight: bolder;
-        }
-        .sub-text {
-            font-style: italic;
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 10px;
-            margin-top: 4px;
-        }
-        #display-name {
-            font-family: 'Playfair Display', serif;
-            color: var(--gold);
-            font-size: 28px;
-            text-transform: uppercase;
-            margin: 4px 0;
-        }
-        #display-its {
-            font-weight: bold;
-            color: var(--dark-green);
-            font-size: 18px;
-            margin-bottom: 11px;
-            margin-top: 4px;
-        }
-        .niyyat-intro {
-            margin: 8px 0;
-            font-weight: bold;
-        }
-        .niyyat-list {
-            text-align: left;
-            display: block;
-            width: fit-content;
-            margin: 0 auto;
-            font-size: 15px;
-            line-height: 1.75;
-            color: #333;
-        }
-        .niyyat-list ul {
-            list-style: none;
-            margin-bottom: 10px;
-            padding-left: 0;
-        }
-        .niyyat-list .star {
-            color: var(--gold);
-            margin-right: 4px;
-        }
-        #blank_space {
-            display: block;
-            height: 0.1px;
-            padding: 0%;
-            margin: 0%;
-        }
-        .footer {
-            margin-top: 0;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--dark-green);
-        }
-        .input-form {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(176,141,87,0.22);
-            padding: 24px 20px;
-            border-radius: 12px;
-            margin-top: 36px;
-            margin-bottom: 60px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-            width: 100%;
-            max-width: 380px;
-            box-sizing: border-box;
-            backdrop-filter: blur(6px);
-            animation: fade-up 0.8s ease both 0.5s;
-        }
-        .input-form::before {
-            content: '';
-            display: block;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
-            margin: -24px -20px 20px;
-            border-radius: 12px 12px 0 0;
-        }
-        .input-form h3 {
-            font-size: 20px;
-            margin: 0 0 16px;
-            color: var(--gold);
-            font-family: 'Playfair Display', serif;
-            letter-spacing: 0.5px;
-        }
-        .input-form label {
-            color: rgba(232,224,208,0.9);
-            font-size: 13px;
-            letter-spacing: 0.3px;
-        }
-        input {
-            width: 100%;
-            padding: 10px 12px;
-            margin: 6px 0 14px;
-            border: 1px solid rgba(176,141,87,0.3);
-            border-radius: 6px;
-            box-sizing: border-box;
-            background: rgba(255,255,255,0.06);
-            color: #f0e8d8;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            transition: border-color 0.25s, box-shadow 0.25s;
-            outline: none;
-        }
-        input::placeholder { color: rgba(255,255,255,0.25); }
-        input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(176,141,87,0.12);
-        }
-        button {
-            background: linear-gradient(135deg, #004d40 0%, #00695c 100%);
-            color: white;
-            padding: 12px 18px;
-            border: 1px solid rgba(176,141,87,0.3);
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 15px;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.5px;
-            transition: background 0.25s, box-shadow 0.25s;
-        }
-        button:hover {
-            background: linear-gradient(135deg, #005f4f 0%, #007c6b 100%);
-            box-shadow: 0 0 14px rgba(0,105,92,0.4);
-        }
-        button:disabled {
-            background-color: #cccccc;
-            color: #666666;
-            cursor: not-allowed;
-        }
-        .button-loading {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .button-loading::before {
-            content: '';
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.45);
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        .loader-overlay {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.45);
-            z-index: 999;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .loader-overlay.visible {
-            display: flex;
-        }
-        .loader-card {
-            width: min(100%, 320px);
-            background: rgba(13,26,21,0.95);
-            border: 1px solid rgba(176,141,87,0.3);
-            border-radius: 14px;
-            padding: 24px 20px;
-            text-align: center;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-        }
-        .loader-spinner {
-            width: 42px;
-            height: 42px;
-            margin: 0 auto 14px;
-            border: 4px solid rgba(176,141,87,0.18);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        .loader-text {
-            color: var(--gold);
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .loader-subtext {
-            color: rgba(232,224,208,0.65);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        .required-star {
-            color: red;
-            margin-left: 4px;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        @media (max-width: 840px) {
-            #certificate {
-                padding: 8.2vw 12vw 5vw;
-            }
-            .main-title {
-                font-size: 4.1vw;
-                margin: 1.1vw 0;
-            }
-            .sub-text {
-                font-size: 2.3vw;
-                margin-bottom: 1.9vw;
-            }
-            #display-name {
-                font-size: 3.8vw;
-                margin: 0.8vw 0;
-            }
-            #display-its {
-                font-size: 2.5vw;
-                margin-bottom: 1.5vw;
-            }
-            .niyyat-list {
-                font-size: 2.1vw;
-                line-height: 1.55;
-            }
-            .niyyat-list ul {
-                margin: 1.1vw 0 0.4vw 0;
-                padding-left: 0;
-            }
-            #blank_space {
-                height: 1vw;
-            }
-            .footer {
-                font-size: 1.9vw;
-                margin-top: 0;
-            }
-            .cert-header-logo {
-                width: 9vw;
-                height: 9vw;
-            }
-        }
-        @media (max-width: 480px) {
-            #certificate {
-                padding: 8.2vw 11vw 5vw;
-            }
-            .main-title {
-                font-size: 3.4vw;
-                letter-spacing: 1px;
-                margin: 0.8vw 0;
-            }
-            .sub-text {
-                font-size: 2.1vw;
-                margin-bottom: 1.3vw;
-            }
-            #display-name {
-                font-size: 3.2vw;
-                margin: 0.4vw 0;
-            }
-            #display-its {
-                font-size: 2.1vw;
-                margin-bottom: 0.9vw;
-            }
-            .niyyat-list {
-                font-size: 2vw;
-                line-height: 1.4;
-            }
-            .niyyat-list ul {
-                margin: 0.8vw 0 0.4vw 0;
-                padding-left: 0;
-            }
-            #blank_space {
-                height: 1vw;
-            }
-            .footer {
-                font-size: 1.7vw;
-            }
-            .cert-header-logo {
-                width: 8vw;
-                height: 8vw;
-            }
-            .input-form {
-                padding: 13px;
-                margin-top: 26px;
-                max-width: 330px;
-            }
-            .input-form h3 {
-                font-size: 17px;
-                margin: 5px 0 15px 0;
-            }
-            .input-form label {
-                font-size: 14px;
-            }
-            input {
-                padding: 8px;
-                font-size: 14px;
-            }
-            button {
-                padding: 10px;
-                font-size: 15px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/src/style.css">
 </head>
-<body>
-    <canvas id="particle-canvas"></canvas>
+<body class="font-sans bg-[linear-gradient(160deg,#0d1a15_0%,#041410_50%,#140505_100%)] flex flex-col items-center p-0 m-0 box-border relative z-[1]">
+
+    <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
     <!-- ── Hero Banner ── -->
-    <section class="hero">
-        <div class="hero-line">
-            <span></span>
-            <div class="hero-line-diamond"></div>
-            <span></span>
+    <section class="hero w-full py-14 px-5 text-center relative overflow-hidden box-border">
+
+        <div class="flex items-center justify-center gap-4 mb-7">
+            <span class="inline-block h-px w-20 bg-gradient-to-r from-transparent to-gold"></span>
+            <div class="w-2 h-2 bg-gold rotate-45 animate-pulse-diamond"></div>
+            <span class="inline-block h-px w-20 bg-gradient-to-l from-transparent to-gold"></span>
         </div>
 
-        <div class="alam-row">
+        <div class="alam-row flex justify-center items-end gap-[52px] my-8 mb-[18px]">
 
             <!-- Abbas Alam — left -->
-            <div class="alam alam-abbas">
-                <!-- Crescent finial -->
-                <svg class="alam-ornament" viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
+            <div class="alam-abbas flex flex-col items-center relative">
+                <svg class="block shrink-0 mb-0.5 w-[22px] h-[28px] animate-ornament [animation-delay:0.7s]"
+                     viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16,4 A10,10 0 1,1 16,20 A8,8 0 1,0 16,4 Z" fill="#c9a96e"/>
                 </svg>
-                <div class="alam-pole">
-                    <div class="alam-flag"><span class="alam-text">يا عباس</span></div>
+                <div class="alam-pole w-[6px] bg-[linear-gradient(to_right,#b89040,#f0d080_38%,#b08030_68%,#8a6020)] rounded-[1px] relative mt-[5px] h-[95px]">
+                    <div class="alam-flag absolute top-1 left-full flex items-center justify-center origin-left animate-flag">
+                        <span class="text-gold font-display font-bold [direction:rtl] text-center [text-shadow:0_0_6px_rgba(176,141,87,0.5)] tracking-[0.5px] leading-[1.2] text-[10.5px]">يا عباس</span>
+                    </div>
                 </div>
-                <div class="alam-base"></div>
+                <div class="w-[18px] h-[7px] bg-[linear-gradient(to_right,#7a5010,#f0d080_50%,#7a5010)] rounded-b-[4px]"></div>
             </div>
 
-            <!-- Husain Alam — centre (taller, red flag) -->
-            <div class="alam alam-husain">
-                <div class="alam-pole">
-                    <div class="alam-flag"><span class="alam-text">يا حسين</span></div>
+            <!-- Husain Alam — centre -->
+            <div class="alam-husain flex flex-col items-center relative">
+                <div class="alam-pole w-[6px] bg-[linear-gradient(to_right,#b89040,#f0d080_38%,#b08030_68%,#8a6020)] rounded-[1px] relative mt-[5px] h-[130px]">
+                    <div class="alam-flag absolute top-1 left-full flex items-center justify-center origin-left animate-flag">
+                        <span class="text-gold font-display font-bold [direction:rtl] text-center [text-shadow:0_0_6px_rgba(176,141,87,0.5)] tracking-[0.5px] leading-[1.2] text-[12px]">يا حسين</span>
+                    </div>
                 </div>
-                <div class="alam-base"></div>
+                <div class="w-[18px] h-[7px] bg-[linear-gradient(to_right,#7a5010,#f0d080_50%,#7a5010)] rounded-b-[4px]"></div>
             </div>
 
             <!-- Abbas Alam — right -->
-            <div class="alam alam-abbas">
-                <svg class="alam-ornament" viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
+            <div class="alam-abbas flex flex-col items-center relative">
+                <svg class="block shrink-0 mb-0.5 w-[22px] h-[28px] animate-ornament [animation-delay:0.7s]"
+                     viewBox="0 0 22 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16,4 A10,10 0 1,1 16,20 A8,8 0 1,0 16,4 Z" fill="#c9a96e"/>
                 </svg>
-                <div class="alam-pole">
-                    <div class="alam-flag"><span class="alam-text">يا عباس</span></div>
+                <div class="alam-pole w-[6px] bg-[linear-gradient(to_right,#b89040,#f0d080_38%,#b08030_68%,#8a6020)] rounded-[1px] relative mt-[5px] h-[95px]">
+                    <div class="alam-flag absolute top-1 left-full flex items-center justify-center origin-left animate-flag">
+                        <span class="text-gold font-display font-bold [direction:rtl] text-center [text-shadow:0_0_6px_rgba(176,141,87,0.5)] tracking-[0.5px] leading-[1.2] text-[10.5px]">يا عباس</span>
+                    </div>
                 </div>
-                <div class="alam-base"></div>
+                <div class="w-[18px] h-[7px] bg-[linear-gradient(to_right,#7a5010,#f0d080_50%,#7a5010)] rounded-b-[4px]"></div>
             </div>
 
         </div>
 
-        <h1 class="ya-husain">
+        <h1 class="font-display text-[clamp(42px,10vw,88px)] text-gold tracking-[4px] m-0 animate-glow leading-[1.1]">
             Ya Husain
-            <span class="ya-husain-arabic">يا حسين</span>
+            <span class="text-[clamp(32px,8vw,66px)] [direction:rtl] block text-[#c9a96e] mt-1 animate-glow-d">يا حسين</span>
         </h1>
-        <p class="hero-tagline">Ashara Mubaraka &nbsp;·&nbsp; 1448H</p>
+        <p class="text-white/70 text-[clamp(12px,2.5vw,15px)] tracking-[3px] uppercase mt-5 mb-0">Ashara Mubaraka &nbsp;·&nbsp; 1448H</p>
 
-        <div class="hero-line" style="margin-top:28px; margin-bottom:0;">
-            <span></span>
-            <div class="hero-line-diamond"></div>
-            <span></span>
+        <div class="flex items-center justify-center gap-4 mt-7 mb-0">
+            <span class="inline-block h-px w-20 bg-gradient-to-r from-transparent to-gold"></span>
+            <div class="w-2 h-2 bg-gold rotate-45 animate-pulse-diamond"></div>
+            <span class="inline-block h-px w-20 bg-gradient-to-l from-transparent to-gold"></span>
         </div>
     </section>
 
     <!-- ── Quote ── -->
-    <div class="quote-band">
-        <p class="quote-text">سواری غم في اوی کربلاء ما</p>
-        <p class="quote-text">حسينية دهاوی کربلاء ما</p>
-        <p class="quote-text">قیامة نے آوای کربلاء ما</p>
-        <p class="quote-text">حسینا یا حسینا یا حسینا!</p>
+    <div class="w-full bg-[rgba(176,141,87,0.07)] border-t border-b border-[rgba(176,141,87,0.15)] py-7 px-5 text-center box-border mb-10">
+        <p class="font-display text-[clamp(15px,3.5vw,20px)] text-gold italic max-w-[700px] mx-auto mb-2 animate-glow">سواری غم في اوی کربلاء ما</p>
+        <p class="font-display text-[clamp(15px,3.5vw,20px)] text-gold italic max-w-[700px] mx-auto mb-2 animate-glow">حسينية دهاوی کربلاء ما</p>
+        <p class="font-display text-[clamp(15px,3.5vw,20px)] text-gold italic max-w-[700px] mx-auto mb-2 animate-glow">قیامة نے آوای کربلاء ما</p>
+        <p class="font-display text-[clamp(15px,3.5vw,20px)] text-gold italic max-w-[700px] mx-auto mb-2 animate-glow">حسینا یا حسینا یا حسینا!</p>
     </div>
 
     <!-- ── Info Cards ── -->
-    <div class="info-section">
-        <div class="info-card">
-            <span class="info-card-icon">☪</span>
-            <h3>Imam Husain ibn Ali (a.s.)</h3>
-            <p>The grandson of Prophet Muhammad (S.A.W.S.) and son of Imam Ali (a.s.) and Bibi Fatema al-Zahra (a.s.). He stood alone against the armies of Yazid at the plains of Karbala on 10 Muharram 61 AH, sacrificing his life to uphold the truth of Islam — "Hayhaat minna zilla" (Never shall we accept humiliation).</p>
+    <div class="w-full max-w-[900px] px-5 pb-12 box-border grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+
+        <div class="info-card bg-white/[0.04] border border-[rgba(176,141,87,0.22)] rounded-xl p-7 text-[#e8e0d0] relative overflow-hidden animate-fade-up transition-[border-color,box-shadow] duration-300 hover:border-[rgba(176,141,87,0.55)] hover:shadow-[0_0_24px_rgba(176,141,87,0.1)]">
+            <span class="text-[28px] mb-3 block [filter:drop-shadow(0_0_6px_rgba(176,141,87,0.5))]">☪</span>
+            <h3 class="text-gold font-display text-[17px] mb-2.5 mt-0 tracking-[0.5px]">Imam Husain ibn Ali (a.s.)</h3>
+            <p class="text-[13.5px] leading-7 m-0 text-[rgba(232,224,208,0.85)]">The grandson of Prophet Muhammad (S.A.W.S.) and son of Imam Ali (a.s.) and Bibi Fatema al-Zahra (a.s.). He stood alone against the armies of Yazid at the plains of Karbala on 10 Muharram 61 AH, sacrificing his life to uphold the truth of Islam — "Hayhaat minna zilla" (Never shall we accept humiliation).</p>
         </div>
-        <div class="info-card">
-            <span class="info-card-icon">🕌</span>
-            <h3>Ashara Mubaraka</h3>
-            <p>The ten sacred days of Muharram observed by the Dawoodi Bohra community in the presence of Syedna Mufaddal Saifuddin (T.U.S.), the 53rd Dai al-Mutlaq. Mumineen gather from across the world to hear his bayaan, to weep for Imam Husain (a.s.), and to renew their bond with the Ahlul Bayt.</p>
+
+        <div class="info-card bg-white/[0.04] border border-[rgba(176,141,87,0.22)] rounded-xl p-7 text-[#e8e0d0] relative overflow-hidden animate-fade-up-2 transition-[border-color,box-shadow] duration-300 hover:border-[rgba(176,141,87,0.55)] hover:shadow-[0_0_24px_rgba(176,141,87,0.1)]">
+            <span class="text-[28px] mb-3 block [filter:drop-shadow(0_0_6px_rgba(176,141,87,0.5))]">🕌</span>
+            <h3 class="text-gold font-display text-[17px] mb-2.5 mt-0 tracking-[0.5px]">Ashara Mubaraka</h3>
+            <p class="text-[13.5px] leading-7 m-0 text-[rgba(232,224,208,0.85)]">The ten sacred days of Muharram observed by the Dawoodi Bohra community in the presence of Syedna Mufaddal Saifuddin (T.U.S.), the 53rd Dai al-Mutlaq. Mumineen gather from across the world to hear his bayaan, to weep for Imam Husain (a.s.), and to renew their bond with the Ahlul Bayt.</p>
         </div>
-        <div class="info-card">
-            <span class="info-card-icon">✦</span>
-            <h3>The Azam (Pledge)</h3>
-            <p>During Ashara, every Mumin makes a firm Niyyat — an intention to dedicate these days entirely to Imam Husain (a.s.). Closing worldly affairs, seeking leave from work and studies, performing khidmat, observing Shariat, and giving voice to Noha and Aweel are acts of love for the Imam.</p>
+
+        <div class="info-card bg-white/[0.04] border border-[rgba(176,141,87,0.22)] rounded-xl p-7 text-[#e8e0d0] relative overflow-hidden animate-fade-up-3 transition-[border-color,box-shadow] duration-300 hover:border-[rgba(176,141,87,0.55)] hover:shadow-[0_0_24px_rgba(176,141,87,0.1)]">
+            <span class="text-[28px] mb-3 block [filter:drop-shadow(0_0_6px_rgba(176,141,87,0.5))]">✦</span>
+            <h3 class="text-gold font-display text-[17px] mb-2.5 mt-0 tracking-[0.5px]">The Azam (Pledge)</h3>
+            <p class="text-[13.5px] leading-7 m-0 text-[rgba(232,224,208,0.85)]">During Ashara, every Mumin makes a firm Niyyat — an intention to dedicate these days entirely to Imam Husain (a.s.). Closing worldly affairs, seeking leave from work and studies, performing khidmat, observing Shariat, and giving voice to Noha and Aweel are acts of love for the Imam.</p>
         </div>
+
     </div>
 
     <!-- ── Section divider ── -->
-    <div class="section-divider">
-        <hr><span class="section-divider-text">Your Certificate</span><hr>
+    <div class="flex items-center gap-4 w-full max-w-[760px] mx-auto mb-8 px-5 box-border">
+        <hr class="flex-1 border-none border-t border-[rgba(176,141,87,0.25)]">
+        <span class="text-gold text-[12px] tracking-[3px] uppercase whitespace-nowrap">Your Certificate</span>
+        <hr class="flex-1 border-none border-t border-[rgba(176,141,87,0.25)]">
     </div>
 
     <!-- ── Certificate ── -->
-    <div class="cert-wrapper">
-    <div id="certificate">
-        <img src="/images/certificate-v3.png" alt="background" class="cert-bg">
+    <div class="w-full flex flex-col items-center px-5 pb-5 box-border">
 
-        <div class="cert-header">
-            <div class="cert-header-title">
-                <h1 class="main-title">My Ashara Azam</h1>
-                <p class="sub-text">Acknowledging the sincere Niyyat of</p>
+        <div id="certificate" class="w-full max-w-[760px] aspect-[1020/700] relative z-0 shadow-[0_0_40px_rgba(176,141,87,0.15),0_0_80px_rgba(0,0,0,0.6)] px-[100px] pt-[75px] pb-[40px] box-border text-center overflow-hidden animate-cert">
+            <img src="/images/certificate-v3.png" alt="background" class="cert-bg absolute top-0 left-0 w-full h-full -z-[1] object-fill">
+
+            <div class="cert-header flex justify-between items-center px-2.5 mt-2.5">
+                <div class="flex-1 text-center">
+                    <h1 class="main-title text-maroon text-[27px] tracking-[2px] my-1 uppercase font-extrabold">My Ashara Azam</h1>
+                    <p class="sub-text italic text-[#666] text-[18px] mb-2.5 mt-1">Acknowledging the sincere Niyyat of</p>
+                </div>
+            </div>
+
+            <h2 id="display-name" class="font-display text-gold text-[28px] uppercase my-1"></h2>
+            <p id="display-its" class="font-bold text-dark-green text-[18px] mb-[11px] mt-1"></p>
+            <p class="niyyat-intro my-2 font-bold">Mein em azam karoon choon ke Ashara Mubaraka ma mein :</p>
+            <div class="niyyat-list text-left block w-fit mx-auto text-[15px] leading-7 text-[#333]">
+                <ul class="list-none mb-2.5 pl-0">
+                    <li><span class="text-gold mr-1">★</span>Maro Business 100% close raakhis.</li>
+                    <li><span class="text-gold mr-1">★</span>Job / Studies si Raza lai lais.</li>
+                    <li><span class="text-gold mr-1">★</span>Noha - Aweel ne zahir karis.</li>
+                    <li><span class="text-gold mr-1">★</span>Jem raza thase, Khidmat karis.</li>
+                    <li><span class="text-gold mr-1">★</span>Shariat ni pabandi karis, Namaz waqt par adda karis.</li>
+                </ul>
+            </div>
+            <div id="blank_space" class="block h-px p-0 m-0"></div>
+            <div class="footer mt-0 text-[14px] font-bold text-dark-green">
+                <p class="m-0">TOLOBA UL KULLIYAT IL MUMENOON - DOHAD</p>
+                <p class="m-0">DATE: <span id="certificate-current-date"></span></p>
             </div>
         </div>
 
-        <h2 id="display-name"></h2>
-        <p id="display-its"></p>
-        <p class="niyyat-intro">Mein em azam karoon choon ke Ashara Mubaraka ma mein :</p>
-        <div class="niyyat-list">
-            <ul>
-                <li><span class="star">★</span>Maro Business 100% close raakhis.</li>
-                <li><span class="star">★</span>Job / Studies si Raza lai lais.</li>
-                <li><span class="star">★</span>Noha - Aweel ne zahir karis.</li>
-                <li><span class="star">★</span>Jem raza thase, Khidmat karis.</li>
-                <li><span class="star">★</span>Shariat ni pabandi karis, Namaz waqt par adda karis.</li>
-            </ul>
+        <div class="input-form bg-white/[0.05] border border-[rgba(176,141,87,0.22)] px-5 py-6 rounded-xl mt-9 mb-[60px] shadow-[0_8px_32px_rgba(0,0,0,0.35)] w-full max-w-[380px] box-border backdrop-blur-[6px] animate-form">
+            <h3 class="text-[20px] mt-0 mb-4 text-gold font-display tracking-[0.5px]">Pledge your Niyyat</h3>
+
+            <label class="text-[rgba(232,224,208,0.9)] text-[13px] tracking-[0.3px]" for="userName">
+                Full Name <span class="text-red-500 ml-1">*</span>
+            </label>
+            <input class="w-full px-3 py-2.5 mt-1.5 mb-3.5 border border-[rgba(176,141,87,0.3)] rounded-[6px] box-border bg-white/[0.06] text-[#f0e8d8] font-sans text-[14px] transition-[border-color,box-shadow] duration-[250ms] outline-none placeholder:text-white/25 focus:border-gold focus:shadow-[0_0_0_3px_rgba(176,141,87,0.12)]"
+                   type="text" id="userName" placeholder="Enter your full name">
+
+            <label class="text-[rgba(232,224,208,0.9)] text-[13px] tracking-[0.3px]" for="userITS">ITS ID</label>
+            <input class="w-full px-3 py-2.5 mt-1.5 mb-3.5 border border-[rgba(176,141,87,0.3)] rounded-[6px] box-border bg-white/[0.06] text-[#f0e8d8] font-sans text-[14px] transition-[border-color,box-shadow] duration-[250ms] outline-none placeholder:text-white/25 focus:border-gold focus:shadow-[0_0_0_3px_rgba(176,141,87,0.12)]"
+                   type="text" id="userITS" placeholder="8-digit ITS number (optional)">
+
+            <div id="errorMessage" class="text-[#ff7070] text-[12px] mt-1.5 hidden"></div>
+
+            <button id="downloadButton" disabled
+                    class="bg-[linear-gradient(135deg,#004d40_0%,#00695c_100%)] text-white py-3 px-[18px] border border-[rgba(176,141,87,0.3)] rounded-[6px] cursor-pointer w-full text-[15px] font-sans tracking-[0.5px] transition-[background,box-shadow] duration-[250ms] hover:bg-[linear-gradient(135deg,#005f4f_0%,#007c6b_100%)] hover:shadow-[0_0_14px_rgba(0,105,92,0.4)]">
+                Download My Certificate
+            </button>
         </div>
-        <div id="blank_space"></div>
-        <div class="footer">
-            <p style="margin: 0;">TOLOBA UL KULLIYAT IL MUMENOON - DOHAD</p>
-            <p style="margin: 0;">DATE: <span id="certificate-current-date"></span></p>
-        </div>
+
     </div>
 
-    <div class="input-form">
-        <h3>Pledge your Niyyat</h3>
-        <label for="userName">Full Name <span class="required-star">*</span></label>
-        <input type="text" id="userName" placeholder="Enter your full name">
-
-        <label for="userITS">ITS ID <span class="required-star">*</span></label>
-        <input type="text" id="userITS" placeholder="8-digit ITS number">
-
-        <div id="errorMessage" style="color: #ff7070; font-size: 12px; margin-top: 5px; display: none;"></div>
-
-        <button id="downloadButton" disabled>Download My Certificate</button>
-    </div>
-    </div>
-
-    <div class="loader-overlay" id="loaderOverlay">
-        <div class="loader-card">
-            <div class="loader-spinner"></div>
-            <div class="loader-text">Preparing your certificate...</div>
-            <div class="loader-subtext">Please wait while we save your pledge and generate the download.</div>
+    <!-- ── Loader overlay ── -->
+    <div id="loaderOverlay" class="fixed inset-0 hidden items-center justify-center bg-black/45 z-[999] p-5 box-border">
+        <div class="w-[min(100%,320px)] bg-[rgba(13,26,21,0.95)] border border-[rgba(176,141,87,0.3)] rounded-[14px] p-6 text-center shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-[8px]">
+            <div class="w-[42px] h-[42px] mx-auto mb-3.5 border-4 border-[rgba(176,141,87,0.18)] border-t-gold rounded-full animate-spin"></div>
+            <div class="text-gold text-[15px] font-bold mb-1.5">Preparing your certificate...</div>
+            <div class="text-[rgba(232,224,208,0.65)] text-[13px] leading-6">Please wait while we save your pledge and generate the download.</div>
         </div>
     </div>
 
@@ -879,7 +230,8 @@
         })();
     </script>
 
-    <script>
+    <script type="module">
+        import html2canvas from 'html2canvas';
         /* ── Certificate download ── */
         (function () {
             const nameInput   = document.getElementById('userName');
@@ -902,30 +254,21 @@
                 const its  = itsInput.value.trim();
                 displayName.textContent = name;
                 displayITS.textContent  = its ? 'ITS: ' + its : '';
-                downloadBtn.disabled    = !(name && its);
+                downloadBtn.disabled    = !name;
             }
 
             nameInput.addEventListener('input', syncCertificate);
             itsInput.addEventListener('input', syncCertificate);
 
             downloadBtn.addEventListener('click', async function () {
-                const name = nameInput.value.trim();
-                const its  = itsInput.value.trim();
+                errorMsg.classList.add('hidden');
 
-                if (!/^\d{8}$/.test(its)) {
-                    errorMsg.textContent  = 'Please enter a valid 8-digit ITS number.';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-                errorMsg.style.display = 'none';
-
-                loader.classList.add('visible');
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
                 downloadBtn.disabled = true;
 
                 try {
                     const cert = document.getElementById('certificate');
-
-                    // Freeze CSS animations so the snapshot is clean
                     cert.style.animation = 'none';
 
                     const canvas = await html2canvas(cert, {
@@ -935,32 +278,53 @@
                         backgroundColor: '#ffffff',
                         logging: false,
                         imageTimeout: 15000,
+                        windowWidth: 1200,
+                        windowHeight: 800,
                         onclone: function (clonedDoc) {
-                            // Ensure the cloned certificate fills its natural size
                             const clonedCert = clonedDoc.getElementById('certificate');
-                            clonedCert.style.animation = 'none';
+                            clonedCert.style.animation  = 'none';
                             clonedCert.style.maxWidth   = 'none';
                             clonedCert.style.width      = '1020px';
                             clonedCert.style.height     = '700px';
+                            clonedCert.style.padding    = '75px 100px 40px';
+
+                            const sel = (s) => clonedDoc.querySelector(s);
+                            const mainTitle = sel('.main-title');
+                            const subText   = sel('.sub-text');
+                            const dispName  = clonedDoc.getElementById('display-name');
+                            const dispITS   = clonedDoc.getElementById('display-its');
+                            const niyyat    = sel('.niyyat-list');
+                            const footer    = sel('.footer');
+                            const logo      = sel('.cert-header-logo');
+                            if (mainTitle) mainTitle.style.fontSize = '27px';
+                            if (subText)   subText.style.fontSize   = '18px';
+                            if (dispName)  dispName.style.fontSize  = '28px';
+                            if (dispITS)   dispITS.style.fontSize   = '18px';
+                            if (niyyat)    niyyat.style.fontSize    = '15px';
+                            if (footer)    footer.style.fontSize    = '14px';
+                            if (logo)    { logo.style.width = '70px'; logo.style.height = '70px'; }
                         }
                     });
 
                     cert.style.animation = '';
 
+                    const name = nameInput.value.trim();
                     const link = document.createElement('a');
                     link.download = 'Ashara-Azam-' + name.replace(/\s+/g, '-') + '.png';
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                 } catch (err) {
                     console.error('Certificate generation failed:', err);
-                    errorMsg.textContent  = 'Could not generate certificate. Please try again.';
-                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = 'Could not generate certificate. Please try again.';
+                    errorMsg.classList.remove('hidden');
                 } finally {
-                    loader.classList.remove('visible');
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
                     downloadBtn.disabled = false;
                 }
             });
         })();
     </script>
+
 </body>
 </html>

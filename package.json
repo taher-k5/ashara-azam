@@ -20,6 +20,11 @@
   },
   "homepage": "https://github.com/taher-k5/ashara-azam#readme",
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "tailwindcss": "^4.2.4",
     "vite": "^8.0.10"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1"
   }
 }
