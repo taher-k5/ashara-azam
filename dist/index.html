@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Ashara Azam - Dohad</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/src/style.css">
+  <script type="module" crossorigin src="/ashara-azam/assets/index-BSVLbe7N.js"></script>
+  <link rel="stylesheet" crossorigin href="/ashara-azam/assets/index-DYMkEjUY.css">
 </head>
 <body class="font-sans bg-[linear-gradient(160deg,#0e2c28_0%,#082420_50%,#0a1f1c_100%)] flex flex-col items-center p-0 m-0 box-border">
 
@@ -51,7 +52,7 @@
     <div class="w-full flex flex-col items-center px-5 pb-5 box-border">
 
         <div id="certificate" class="w-full max-w-[760px] aspect-[1020/700] relative z-0 shadow-[0_0_40px_rgba(92,181,163,0.15),0_0_80px_rgba(0,0,0,0.6)] px-[100px] pt-[75px] pb-[40px] box-border text-center overflow-clip animate-cert">
-            <img src="/images/certificate-v3.png" alt="background" class="cert-bg absolute top-0 left-0 w-full h-full -z-[1] object-fill">
+            <img src="/ashara-azam/assets/certificate-v3-DmbyDvBy.png" alt="background" class="cert-bg absolute top-0 left-0 w-full h-full -z-[1] object-fill">
 
             <div class="cert-header flex justify-between items-center px-2.5 mt-2.5">
                 <div class="flex-1 text-center">
@@ -166,138 +167,6 @@
         })();
     </script>
 
-    <script type="module">
-        import html2canvas from 'html2canvas';
-        /* ── Certificate download ── */
-        (function () {
-            const nameInput   = document.getElementById('userName');
-            const itsInput    = document.getElementById('userITS');
-            const downloadBtn = document.getElementById('downloadButton');
-            const errorMsg    = document.getElementById('errorMessage');
-            const displayName = document.getElementById('display-name');
-            const loader      = document.getElementById('loaderOverlay');
-            const dateEl      = document.getElementById('certificate-current-date');
-
-            // Set today's date in the certificate
-            dateEl.textContent = new Date().toLocaleDateString('en-GB', {
-                day: 'numeric', month: 'long', year: 'numeric'
-            });
-
-            // Mirror name into certificate preview; require both name + valid ITS
-            function syncCertificate() {
-                const name     = nameInput.value.trim();
-                const its      = itsInput.value.trim();
-                const itsValid = /^\d{8}$/.test(its);
-
-                displayName.textContent = name;
-                downloadBtn.disabled    = !(name && itsValid);
-
-                // Real-time ITS feedback
-                if (its.length === 0) {
-                    itsInput.style.borderColor = '';
-                    itsHint.textContent = '';
-                } else if (itsValid) {
-                    itsInput.style.borderColor = '#4caf50';
-                    itsHint.textContent = '';
-                } else {
-                    itsInput.style.borderColor = '#ff7070';
-                    itsHint.textContent = /\D/.test(its)
-                        ? 'Numbers only.'
-                        : `${its.length}/8 digits`;
-                }
-            }
-
-            const itsHint = document.getElementById('itsHint');
-            nameInput.addEventListener('input', syncCertificate);
-            itsInput.addEventListener('input', syncCertificate);
-
-            const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGpBbE4WlhDZSpuDlRZOyhuobK_PjkKk1z52VwUe9dVKyCw29Lw_N_p3IOFRFZoBLhdg/exec';
-
-            async function savePledge(name, its) {
-                // no-cors avoids preflight; Apps Script still receives the body
-                await fetch(SHEET_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({ name, its }),
-                });
-            }
-
-            downloadBtn.addEventListener('click', async function () {
-                const name = nameInput.value.trim();
-                const its  = itsInput.value.trim();
-
-                if (!/^\d{8}$/.test(its)) {
-                    errorMsg.textContent = 'ITS ID must be exactly 8 digits.';
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-
-                errorMsg.classList.add('hidden');
-
-                loader.classList.remove('hidden');
-                loader.classList.add('flex');
-                downloadBtn.disabled = true;
-
-                try {
-                    const cert = document.getElementById('certificate');
-                    cert.style.animation = 'none';
-
-                    const canvas = await html2canvas(cert, {
-                        scale: 3,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#ffffff',
-                        logging: false,
-                        imageTimeout: 15000,
-                        windowWidth: 1200,
-                        windowHeight: 800,
-                        onclone: function (clonedDoc) {
-                            const clonedCert = clonedDoc.getElementById('certificate');
-                            clonedCert.style.animation  = 'none';
-                            clonedCert.style.maxWidth   = 'none';
-                            clonedCert.style.width      = '1020px';
-                            clonedCert.style.height     = '700px';
-                            clonedCert.style.padding    = '75px 100px 40px';
-
-                            const sel = (s) => clonedDoc.querySelector(s);
-                            const mainTitle = sel('.main-title');
-                            const subText   = sel('.sub-text');
-                            const dispName  = clonedDoc.getElementById('display-name');
-                            const dispITS   = clonedDoc.getElementById('display-its');
-                            const niyyat    = sel('.niyyat-list');
-                            const footer    = sel('.footer');
-                            const logo      = sel('.cert-header-logo');
-                            if (mainTitle) mainTitle.style.fontSize = '27px';
-                            if (subText)   subText.style.fontSize   = '18px';
-                            if (dispName)  dispName.style.fontSize  = '28px';
-                            if (dispITS)   dispITS.style.fontSize   = '18px';
-                            if (niyyat)    niyyat.style.fontSize    = '15px';
-                            if (footer)    footer.style.fontSize    = '14px';
-                            if (logo)    { logo.style.width = '70px'; logo.style.height = '70px'; }
-                        }
-                    });
-
-                    cert.style.animation = '';
-
-                    savePledge(name, its);
-
-                    const link = document.createElement('a');
-                    link.download = 'Ashara-Azam-' + name.replace(/\s+/g, '-') + '.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                } catch (err) {
-                    console.error('Certificate generation failed:', err);
-                    errorMsg.textContent = 'Could not generate certificate. Please try again.';
-                    errorMsg.classList.remove('hidden');
-                } finally {
-                    loader.classList.add('hidden');
-                    loader.classList.remove('flex');
-                    downloadBtn.disabled = false;
-                }
-            });
-        })();
-    </script>
 
 </body>
 </html>
